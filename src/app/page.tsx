@@ -1,8 +1,8 @@
 export default function Home() {
   return (
-    <div className="flex h-screen flex-col bg-[#000000]">
+    <div className="flex h-screen flex-col bg-white">
       <nav className="h-32 bg-[#181313]">
-        <p className="font-bowlbyOneSC text-3xl">Study Loop</p>
+        <p className="font-bowlbyOneSC text-accent-foreground">Study Loop</p>
       </nav>
       <main className="size-full">
         <div
