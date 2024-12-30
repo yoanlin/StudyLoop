@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Bowlby_One_SC } from "next/font/google";
 import "./globals.css";
+import Navbar from "@/components/navigation/Navbar";
 
 const bowlbyOneSC = Bowlby_One_SC({
   variable: "--font-bowlbyOneSC",
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bowlbyOneSC.variable} antialiased`}>{children}</body>
+      <body className={`${bowlbyOneSC.variable} antialiased`}>
+        <Navbar />
+        {children}
+      </body>
     </html>
   );
 }
