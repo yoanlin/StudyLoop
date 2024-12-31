@@ -1,11 +1,17 @@
 import type { Metadata } from "next";
-import { Bowlby_One_SC } from "next/font/google";
+import { Bowlby_One_SC, Markazi_Text } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navigation/Navbar";
 
 const bowlbyOneSC = Bowlby_One_SC({
   variable: "--font-bowlbyOneSC",
   weight: "400",
+  subsets: ["latin"],
+});
+
+const markaziText = Markazi_Text({
+  variable: "--font-markaziText",
+  weight: ["400", "500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -21,7 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bowlbyOneSC.variable} antialiased`}>
+      <body
+        className={`${bowlbyOneSC.variable} ${markaziText.variable} antialiased`}
+      >
         <Navbar />
         {children}
       </body>

@@ -53,6 +53,7 @@ export default {
       },
       fontFamily: {
         bowlbyOneSC: "var(--font-bowlbyOneSC)",
+        markaziText: "var(--font-markaziText)",
       },
       borderRadius: {
         lg: "var(--radius)",
