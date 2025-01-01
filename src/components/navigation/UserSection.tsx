@@ -27,7 +27,13 @@ const UserSection = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
             href={item.route}
             className={`flex w-2/3 justify-start gap-3 p-4 hover:bg-secondary max-lg:w-auto max-lg:p-6 max-sm:w-full max-sm:p-4 ${isSelected && "bg-secondary font-bold"}`}
           >
-            <Image src={item.imgURL} alt={item.name} width={20} height={20} />
+            <Image
+              src={item.imgURL}
+              alt={item.name}
+              width={20}
+              height={20}
+              className="dark:invert"
+            />
             <p className={cn("text-2xl", !isMobileNav && "max-lg:hidden")}>
               {item.name}
             </p>

@@ -5,10 +5,11 @@ import Image from "next/image";
 import Link from "next/link";
 import MobileNav from "./MobileNav";
 import Searchbar from "./Searchbar";
+import { ThemeToggle } from "./ThemeToggle";
 
 const Navbar = () => {
   return (
-    <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 dark:text-white">
+    <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6">
       <div className="flex cursor-pointer gap-5">
         <MobileNav />
         <Link href="/home" className="flex gap-5">
@@ -25,13 +26,14 @@ const Navbar = () => {
         </Link>
       </div>
       <Searchbar />
-      <div className="mr-5 flex gap-8">
+      <div className="mr-5 flex items-center gap-8">
         <Search
           color="#c0c0c0"
           strokeWidth={2.5}
           className="ml-2 cursor-pointer lg:hidden"
         />
-        <p>Light/Dark</p> <p>UserAvatar</p>
+        <ThemeToggle />
+        <p>UserAvatar</p>
       </div>
     </nav>
   );

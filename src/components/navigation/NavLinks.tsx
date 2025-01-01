@@ -24,7 +24,13 @@ const NavLinks = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
               isSelected && "bg-secondary font-bold"
             )}
           >
-            <Image src={item.imgURL} alt={item.name} width={20} height={20} />
+            <Image
+              src={item.imgURL}
+              alt={item.name}
+              width={20}
+              height={20}
+              className="dark:invert"
+            />
             <p className={cn("text-2xl", !isMobileNav && "max-lg:hidden")}>
               {item.name}
             </p>

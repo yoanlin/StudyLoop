@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Bowlby_One_SC, Markazi_Text } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/navigation/Navbar";
+import { ThemeProvider } from "./context/ThemeProvider";
 
 const bowlbyOneSC = Bowlby_One_SC({
   variable: "--font-bowlbyOneSC",
@@ -26,12 +27,19 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${bowlbyOneSC.variable} ${markaziText.variable} antialiased`}
       >
-        <Navbar />
-        {children}
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Navbar />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
