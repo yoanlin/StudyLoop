@@ -8,7 +8,7 @@ import Searchbar from "./Searchbar";
 
 const Navbar = () => {
   return (
-    <nav className="sticky top-0 z-50 flex h-24 items-center justify-between bg-primary px-6 dark:text-white">
+    <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 dark:text-white">
       <div className="flex cursor-pointer gap-5">
         <MobileNav />
         <Link href="/home" className="flex gap-5">

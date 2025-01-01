@@ -16,7 +16,7 @@ const MobileNav = () => {
   return (
     <Sheet>
       <SheetTrigger>
-        <Menu className="sm:hidden" />
+        <Menu strokeWidth={2.75} color="#c0c0c0" className="sm:hidden" />
       </SheetTrigger>
       <SheetContent side={"left"} className="max-w-80 bg-primary">
         <SheetTitle className="hidden">Navigation</SheetTitle>
