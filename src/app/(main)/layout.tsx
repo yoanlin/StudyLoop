@@ -1,10 +1,11 @@
 import LeftSidebar from "@/components/navigation/LeftSidebar";
-import React from "react";
+import React, { ReactNode } from "react";
 
-const MainLayout = () => {
+const MainLayout = ({ children }: { children: ReactNode }) => {
   return (
     <div>
       <LeftSidebar />
+      <section className="ml-80 bg-background">{children}</section>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import Link from "next/link";
 import MobileNav from "./MobileNav";
 import Searchbar from "./Searchbar";
 import { ThemeToggle } from "./ThemeToggle";
+import { Button } from "../ui/button";
 
 const Navbar = () => {
   return (
@@ -26,14 +27,16 @@ const Navbar = () => {
         </Link>
       </div>
       <Searchbar />
-      <div className="mr-5 flex items-center gap-8">
+      <div className="mr-5 flex items-center gap-5">
         <Search
           color="#c0c0c0"
           strokeWidth={2.5}
           className="ml-2 cursor-pointer lg:hidden"
         />
         <ThemeToggle />
-        <p>UserAvatar</p>
+        <Button className="bg-secondary font-markaziText text-lg text-foreground">
+          Log in
+        </Button>
       </div>
     </nav>
   );
