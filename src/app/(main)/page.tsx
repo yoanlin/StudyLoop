@@ -14,7 +14,7 @@ const postInfo = [
 export default function Home() {
   return (
     <div className="flex h-screen flex-col items-center overflow-x-hidden">
-      <main className="flex size-full flex-col items-center border">
+      <main className="flex size-full flex-col border lg:ml-[max(40rem,calc(100vw-60rem))]">
         <Hero />
         {/* <PostCard /> */}
         <div></div>
