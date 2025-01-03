@@ -10,7 +10,7 @@ import { Button } from "../ui/button";
 
 const Navbar = () => {
   return (
-    <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6">
+    <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 max-sm:h-16">
       <div className="flex cursor-pointer gap-5">
         <MobileNav />
         <Link href="/home" className="flex gap-5">
@@ -27,16 +27,14 @@ const Navbar = () => {
         </Link>
       </div>
       <Searchbar />
-      <div className="mr-5 flex items-center gap-5">
+      <div className="flex items-center gap-3">
         <Search
           color="#c0c0c0"
           strokeWidth={2.5}
           className="ml-2 cursor-pointer lg:hidden"
         />
         <ThemeToggle />
-        <Button className="bg-secondary font-markaziText text-lg text-foreground">
-          Log in
-        </Button>
+        <Button className="button font-markaziText text-lg">Log in</Button>
       </div>
     </nav>
   );

@@ -16,7 +16,9 @@ const UserSection = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
         isMobileNav ? "items-start" : "items-end"
       )}
     >
-      <h3 className="cursor-default self-center text-xl">Personal</h3>
+      <h3 className="cursor-default self-center text-xl xl:self-end xl:pr-36">
+        Personal
+      </h3>
       {userbarLinks.map((item) => {
         const isSelected =
           (pathname.includes(item.route) && item.route.length > 1) ||
@@ -25,7 +27,10 @@ const UserSection = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
           <Link
             key={item.route}
             href={item.route}
-            className={`flex w-2/3 justify-start gap-3 p-4 hover:bg-secondary max-lg:w-auto max-lg:p-6 max-sm:w-full max-sm:p-4 ${isSelected && "bg-secondary font-bold"}`}
+            className={cn(
+              "flex shrink justify-start p-4 sm:p-6 gap-3 w-full hover:bg-secondary lg:w-48 xl:w-56 lg:p-4",
+              isSelected && "bg-secondary font-bold"
+            )}
           >
             <Image
               src={item.imgURL}
