@@ -1,7 +1,24 @@
+import Hero from "@/components/Hero";
+
+const postInfo = [
+  {
+    id: 1,
+    title: "Top Most Important Travel Phrases in English ",
+    field: "language",
+    author: "John Doe",
+    avatar: "",
+    createdAt: "2025-01-01",
+  },
+];
+
 export default function Home() {
   return (
-    <div className="flex h-screen flex-col">
-      <main className="size-full"></main>
+    <div className="flex h-screen flex-col items-center overflow-x-hidden">
+      <main className="flex size-full flex-col items-center border">
+        <Hero />
+        {/* <PostCard /> */}
+        <div></div>
+      </main>
     </div>
   );
 }
