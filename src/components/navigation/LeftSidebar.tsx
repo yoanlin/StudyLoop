@@ -4,7 +4,7 @@ import UserSection from "./UserSection";
 
 const LeftSidebar = () => {
   return (
-    <section className="fixed left-0 top-0 h-full w-80 bg-primary font-markaziText max-lg:w-auto max-sm:hidden">
+    <section className="fixed left-0 top-0 h-full bg-background font-markaziText max-lg:w-auto max-sm:hidden lg:w-[max(20rem,calc(100vw-60rem)/2)]">
       <NavLinks />
 
       <UserSection />
