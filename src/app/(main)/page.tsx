@@ -1,23 +1,33 @@
+import PostCard from "@/components/cards/PostCard";
+import FilterSelector from "@/components/FilterSelector";
 import Hero from "@/components/Hero";
-
-const postInfo = [
-  {
-    id: 1,
-    title: "Top Most Important Travel Phrases in English ",
-    field: "language",
-    author: "John Doe",
-    avatar: "",
-    createdAt: "2025-01-01",
-  },
-];
 
 export default function Home() {
   return (
-    <div className="flex h-screen flex-col items-center overflow-x-hidden">
-      <main className="flex size-full flex-col border lg:ml-[max(40rem,calc(100vw-60rem))]">
+    <div className="flex h-screen w-full flex-col items-center overflow-x-hidden">
+      <main className="flex size-full flex-col pb-8 lg:ml-[max(40rem,calc(100vw-60rem))]">
         <Hero />
-        {/* <PostCard /> */}
-        <div></div>
+        <section className="mt-10 flex flex-col items-center gap-5 px-10 md:px-20 lg:max-w-3xl xl:max-w-5xl">
+          <div className="flex w-full max-w-2xl flex-col items-center justify-between gap-5 sm:flex-row">
+            <h1 className="self-start font-bowlbyOneSC text-3xl">All Posts</h1>
+            <FilterSelector
+              options={[
+                { value: "newest", label: "Newest" },
+                { value: "top_rated", label: "Top Rated" },
+              ]}
+            />
+          </div>
+
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
+          <PostCard />
+        </section>
       </main>
     </div>
   );
