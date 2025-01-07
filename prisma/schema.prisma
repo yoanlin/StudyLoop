@@ -23,21 +23,22 @@ model Post {
 
 model User {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  email         String   @unique
-  username      String
-  picture       String?
-  password      String?
+  email         String   @unique @db.String
+  username      String   @db.String
+  picture       String?  @db.String
+  providers     String[]  @default([]) @db.String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   posts         Post[]    @relation("AuthorPosts")
   comments      Comment[]
   collections   PostCollector[]
   subscriptions UserSubscription[]
+  accounts      Account[]
 }
 
 model Field {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String
+  name       String   @db.String
   posts      Post[]
   subscriber UserSubscription[]
   createdAt DateTime @default(now())
@@ -45,7 +46,7 @@ model Field {
 
 model Comment {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  content     String
+  content     String   @db.String
   rating      Int      @default(0)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -70,4 +71,20 @@ model UserSubscription {
   user       User     @relation(fields: [userId], references: [id])
   fieldId    String   @db.ObjectId
   field      Field    @relation(fields: [fieldId], references: [id])
+}
+
+model Account {
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId             String   @db.ObjectId
+  user               User     @relation(fields: [userId], references: [id])
+  type               String   @db.String
+  provider           String   @db.String
+  providerAccountId  String   @db.String
+  refresh_token      String?  @db.String
+  access_token       String?  @db.String
+  expires_at         Int?
+  token_type         String?  @db.String
+  scope              String?  @db.String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 }
