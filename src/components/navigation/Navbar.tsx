@@ -37,7 +37,7 @@ const Navbar = ({ isMain }: { isMain?: boolean }) => {
             />
             <ThemeToggle />
             <Button className="button font-markaziText text-lg" asChild>
-              <Link href="/log_in">Log in</Link>
+              <Link href="/login">Login</Link>
             </Button>
           </div>
         </>

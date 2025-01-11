@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Bowlby_One_SC, Markazi_Text } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/navigation/Navbar";
 import { ThemeProvider } from "./context/ThemeProvider";
 
 const bowlbyOneSC = Bowlby_One_SC({

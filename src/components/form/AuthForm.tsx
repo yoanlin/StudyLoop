@@ -11,7 +11,7 @@ const AuthForm = ({ isSignUp }: { isSignUp?: boolean }) => {
   const form = useForm();
   return (
     <Form {...form}>
-      <form className="flex flex-col gap-5">
+      <form action="/api/auth/register" className="flex flex-col gap-5">
         <div className="space-y-3 pt-10">
           <Label htmlFor="email" className="mt-10 text-lg">
             Email Address:
@@ -44,15 +44,15 @@ const AuthForm = ({ isSignUp }: { isSignUp?: boolean }) => {
             ></Input>
           </div>
         )}
-        <Button className="mt-5 w-full px-10 py-5 text-foreground">
-          {isSignUp ? "Sign Up" : "Log In"}
+        <Button className="button mt-5 w-full px-10 py-5 font-bold">
+          {isSignUp ? "Sign Up" : "Login"}
         </Button>
 
         {isSignUp ? (
           <p>
             Already have an account?{" "}
-            <Link href="/log_in" className="font-bold text-amber-500">
-              Log in
+            <Link href="/login" className="font-bold text-amber-500">
+              Login
             </Link>
           </p>
         ) : (

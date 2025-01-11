@@ -24,8 +24,10 @@ model Post {
 model User {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   email         String   @unique @db.String
-  username      String   @db.String
-  picture       String?  @db.String
+  name          String   @db.String
+  username      String   @unique @db.String
+  image         String?  @db.String
+  emailVerified DateTime? 
   providers     String[]  @default([]) @db.String
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -34,6 +36,7 @@ model User {
   collections   PostCollector[]
   subscriptions UserSubscription[]
   accounts      Account[]
+  sessions      Session[]
 }
 
 model Field {
@@ -80,11 +83,35 @@ model Account {
   type               String   @db.String
   provider           String   @db.String
   providerAccountId  String   @db.String
+  password           String?  @db.String
   refresh_token      String?  @db.String
   access_token       String?  @db.String
   expires_at         Int?
   token_type         String?  @db.String
   scope              String?  @db.String
+  id_token           String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model VerificationToken {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  identifier String
+  token      String
+  expires    DateTime
+ 
+  @@unique([identifier, token])
 }
