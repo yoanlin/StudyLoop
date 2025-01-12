@@ -1,71 +1,110 @@
 "use client";
+
 import React from "react";
-import { Form } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { useForm } from "react-hook-form";
+import {
+  FieldValues,
+  useForm,
+  DefaultValues,
+  Path,
+  SubmitHandler,
+} from "react-hook-form";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { z, ZodType } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 
-const AuthForm = ({ isSignUp }: { isSignUp?: boolean }) => {
-  const form = useForm();
+interface AuthFormProps<T extends FieldValues> {
+  formType: "LOGIN" | "SIGNUP";
+  schema: ZodType<T>;
+  defaultValues: T;
+  onSubmit: (data: T) => Promise<unknown>;
+}
+
+export default function AuthForm<T extends FieldValues>({
+  formType,
+  schema,
+  defaultValues,
+  onSubmit,
+}: AuthFormProps<T>) {
+  const router = useRouter();
+  const form = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+    defaultValues: defaultValues as DefaultValues<T>,
+  });
+
+  const handleSubmit: SubmitHandler<T> = async (data) => {
+    await onSubmit(data);
+
+    router.push("/");
+  };
+
+  const buttonText = formType === "LOGIN" ? "Log In" : "Sign Up";
   return (
     <Form {...form}>
-      <form action="/api/auth/register" className="flex flex-col gap-5">
-        <div className="space-y-3 pt-10">
-          <Label htmlFor="email" className="mt-10 text-lg">
-            Email Address:
-          </Label>
-          <Input
-            id="email"
-            name="email"
-            placeholder="user@example.com"
-            type="email"
-            required
-          ></Input>
-        </div>
-        <div className="space-y-3 pt-5">
-          <Label htmlFor="password" className="text-lg">
-            Password:
-          </Label>
-          <Input id="password" name="password" type="password" required></Input>
-        </div>
+      <form onSubmit={form.handleSubmit(handleSubmit)}>
+        {Object.keys(defaultValues).map((field) => (
+          <FormField
+            key={field}
+            control={form.control}
+            name={field as Path<T>}
+            render={({ field }) => (
+              <FormItem className="mt-5">
+                <FormLabel>
+                  {field.name === "email"
+                    ? "Email Address"
+                    : field.name.charAt(0).toUpperCase() + field.name.slice(1)}
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    required
+                    type={field.name === "password" ? "password" : "text"}
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
 
-        {isSignUp && (
-          <div className="space-y-3 pt-5">
-            <Label htmlFor="username" className="text-xl">
-              Username:
-            </Label>
-            <Input
-              id="username"
-              name="username"
-              type="text"
-              placeholder="4 ~ 12 characters"
-            ></Input>
-          </div>
-        )}
-        <Button className="button mt-5 w-full px-10 py-5 font-bold">
-          {isSignUp ? "Sign Up" : "Login"}
+        <Button
+          type="submit"
+          disabled={form.formState.isSubmitting}
+          className="button mt-5 w-full sm:w-auto"
+        >
+          {form.formState.isSubmitting
+            ? buttonText === "Log In"
+              ? "Logging in..."
+              : "Signing up..."
+            : buttonText}
         </Button>
 
-        {isSignUp ? (
-          <p>
-            Already have an account?{" "}
-            <Link href="/login" className="font-bold text-amber-500">
-              Login
+        {formType === "LOGIN" ? (
+          <p className="mt-5">
+            Don&apos;t have an account?{" "}
+            <Link href="/sign_up" className="text-orange-400">
+              Sign up
             </Link>
           </p>
         ) : (
-          <p>
-            Don&apos;t have an account?{" "}
-            <Link href="/sign_up" className="font-bold text-amber-500">
-              Sign up
+          <p className="mt-5">
+            Already have an account?{" "}
+            <Link href="/login" className="text-orange-400">
+              Login
             </Link>
           </p>
         )}
       </form>
     </Form>
   );
-};
-
-export default AuthForm;
+}

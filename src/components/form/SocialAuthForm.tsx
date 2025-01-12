@@ -16,7 +16,7 @@ const SocialAuthForm = () => {
     }
   };
   return (
-    <div className="flex flex-col justify-between gap-3 p-3 sm:flex-row">
+    <div className="flex flex-col justify-between gap-3 sm:flex-row">
       <Button
         onClick={() => handleSignIn("google")}
         className="flex border bg-background py-5 text-foreground sm:w-1/2"
