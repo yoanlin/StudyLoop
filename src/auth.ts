@@ -6,6 +6,7 @@ import Credentials from "next-auth/providers/credentials";
 import db from "./db/db";
 import { LogInSchema } from "./lib/validations";
 import bcrypt from "bcryptjs";
+import { api } from "./lib/api";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(db),
@@ -66,70 +67,29 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       session.user.id = token.sub as string;
       return session;
     },
-    async signIn({ user, account }) {
-      try {
-        if (!account || !user) return false;
-        if (
-          !account.provider ||
-          !account.providerAccountId ||
-          !user.email ||
-          !user.name
-        ) {
-          throw new Error("Missing required OAuth fields");
-        }
+    async signIn({ user, account, profile }) {
+      if (account?.type === "credentials") return true;
+      if (!account || !user) return false;
 
-        const { provider, providerAccountId } = account;
-        const { email, name, image } = user;
-        const username = email.split("@")[0];
+      const userInfo = {
+        name: user.name!,
+        email: user.email!,
+        image: user.image!,
+        username:
+          account.provider === "github"
+            ? (profile?.login as string)
+            : (user.name?.toLowerCase() as string),
+      };
 
-        await db.$transaction(async (tx) => {
-          const existingUser = await tx.user.findUnique({ where: { email } });
+      const { success } = (await api.auth.oAuthLogin({
+        provider: account.provider as "github" | "google",
+        providerAccountId: account.providerAccountId,
+        user: userInfo,
+      })) as ActionResponse;
 
-          if (!existingUser) {
-            const newUser = await tx.user.create({
-              data: {
-                email,
-                name,
-                image,
-                username,
-              },
-            });
+      if (!success) return false;
 
-            await tx.account.create({
-              data: {
-                provider,
-                providerAccountId,
-                type: "oauth",
-                userId: newUser.id,
-              },
-            });
-          } else {
-            const existingAccount = await tx.account.findUnique({
-              where: {
-                provider_providerAccountId: {
-                  provider,
-                  providerAccountId,
-                },
-              },
-            });
-            if (!existingAccount) {
-              await tx.account.create({
-                data: {
-                  provider,
-                  providerAccountId,
-                  type: "oauth",
-                  userId: existingUser.id,
-                },
-              });
-            }
-          }
-        });
-
-        return true;
-      } catch (error) {
-        console.error("Error during OAuth sign-in", error);
-        return false;
-      }
+      return true;
     },
   },
 });

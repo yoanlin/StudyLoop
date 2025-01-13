@@ -2,7 +2,6 @@ import db from "@/db/db";
 import { LogInWithOAuthSchema } from "@/lib/validations";
 import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
-import { serialize } from "cookie";
 
 // Create User
 export async function POST(req: Request) {
@@ -18,7 +17,7 @@ export async function POST(req: Request) {
 
     const { name, username, email, image } = user;
 
-    const result = await db.$transaction(async (tx) => {
+    await db.$transaction(async (tx) => {
       // 查找 or 創建用戶
       let existingUser = await tx.user.findUnique({ where: { email } });
 
@@ -79,27 +78,9 @@ export async function POST(req: Request) {
       return { sessionToken, user: existingUser };
     });
 
-    // 將 session token 寫入 Cookie
-    const cookie = serialize("session_token", result.sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "strict",
-      maxAge: 60 * 60 * 24 * 7,
-      path: "/",
-    });
-
-    return new Response(JSON.stringify({ success: true, user: result.user }), {
-      status: 200,
-      headers: {
-        "Set-Cookie": cookie,
-        "Content-Type": "application/json",
-      },
-    });
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Error during login: ", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+    return NextResponse.json({ success: false, status: 500 });
   }
 }

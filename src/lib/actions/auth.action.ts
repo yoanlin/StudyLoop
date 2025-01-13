@@ -7,13 +7,6 @@ import { signIn } from "@/auth";
 import { NotFoundError } from "../errors";
 import action from "../handlers/action";
 
-interface AuthCredentials {
-  email: string;
-  password: string;
-  name: string;
-  username: string;
-}
-
 export async function LogInWithCredentials(
   formdata: Pick<AuthCredentials, "email" | "password">
 ) {
