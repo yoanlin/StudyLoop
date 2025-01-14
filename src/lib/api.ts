@@ -1,3 +1,4 @@
+import { Account } from "@prisma/client";
 import ROUTES from "../../constants/routes";
 import { fetchHandler } from "./handlers/fetch";
 
@@ -10,6 +11,18 @@ export const api = {
       fetchHandler(`${API_BASE_URL}/auth/${ROUTES.LOG_IN_WITH_OAUTH}`, {
         method: "POST",
         body: JSON.stringify({ user, provider, providerAccountId }),
+      }),
+  },
+  accounts: {
+    create: (accountData: Account) =>
+      fetchHandler(`${API_BASE_URL}/accounts`, {
+        method: "POST",
+        body: JSON.stringify(accountData),
+      }),
+    getByProvider: (providerAccountId: string) =>
+      fetchHandler(`${API_BASE_URL}/accounts/provider}`, {
+        method: "POST",
+        body: JSON.stringify({ providerAccountId }),
       }),
   },
 };

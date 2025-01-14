@@ -7,8 +7,10 @@ import MobileNav from "./MobileNav";
 import Searchbar from "./Searchbar";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "../ui/button";
+import { auth } from "@/auth";
 
-const Navbar = ({ isMain }: { isMain?: boolean }) => {
+const Navbar = async ({ isMain }: { isMain?: boolean }) => {
+  const session = await auth();
   return (
     <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 max-sm:h-16">
       <div className="flex cursor-pointer gap-5">
@@ -36,9 +38,14 @@ const Navbar = ({ isMain }: { isMain?: boolean }) => {
               className="ml-2 cursor-pointer lg:hidden"
             />
             <ThemeToggle />
-            <Button className="button font-markaziText text-lg" asChild>
-              <Link href="/login">Login</Link>
-            </Button>
+
+            {session?.user?.id ? (
+              <></>
+            ) : (
+              <Button className="button font-markaziText text-lg" asChild>
+                <Link href="/login">Login</Link>
+              </Button>
+            )}
           </div>
         </>
       )}

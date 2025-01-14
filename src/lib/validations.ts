@@ -46,3 +46,20 @@ export const SignUpSchema = z.object({
       message: "Username can only contain letters, numbers, and underscores.",
     }),
 });
+
+export const AccountSchema = z.object({
+  id: z.string().optional(),
+  userId: z.string(),
+  type: z.enum(["oauth", "credentials"]),
+  provider: z.string().nonempty("Provider is required"),
+  providerAccountId: z.string().nonempty("Provider account ID is required"),
+  password: z.string().optional().nullable(),
+  refresh_token: z.string().optional().nullable(),
+  access_token: z.string().optional().nullable(),
+  expires_at: z.number().optional().nullable(),
+  token_type: z.string().optional().nullable(),
+  scope: z.string().optional().nullable(),
+  id_token: z.string().optional().nullable(),
+  createdAt: z.date().optional(),
+  updatedAt: z.date().optional(),
+});
