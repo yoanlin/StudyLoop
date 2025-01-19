@@ -90,6 +90,7 @@ model Account {
   token_type         String?  @db.String
   scope              String?  @db.String
   id_token           String?
+  session_state      String?
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 
@@ -98,7 +99,7 @@ model Account {
 
 model Session {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  sessionToken String   @unique
+  sessionToken String   @unique @db.String
   userId       String   @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)

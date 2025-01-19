@@ -1,4 +1,4 @@
-import { Account } from "@prisma/client";
+import { Account, User } from "@prisma/client";
 import ROUTES from "../../constants/routes";
 import { fetchHandler } from "./handlers/fetch";
 
@@ -20,9 +20,17 @@ export const api = {
         body: JSON.stringify(accountData),
       }),
     getByProvider: (providerAccountId: string) =>
-      fetchHandler(`${API_BASE_URL}/accounts/provider}`, {
+      fetchHandler(`${API_BASE_URL}/accounts/provider`, {
         method: "POST",
         body: JSON.stringify({ providerAccountId }),
       }),
+  },
+  users: {
+    create: (userData: User) =>
+      fetchHandler(`${API_BASE_URL}/users`, {
+        method: "POST",
+        body: JSON.stringify(userData),
+      }),
+    getById: (id: string) => fetchHandler(`${API_BASE_URL}/users/${id}`),
   },
 };

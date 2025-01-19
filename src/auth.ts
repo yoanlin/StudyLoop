@@ -3,12 +3,14 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import GitHub from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
-import db from "./db/db";
 import { LogInSchema } from "./lib/validations";
 import bcrypt from "bcryptjs";
 import { api } from "./lib/api";
+import { Account, User } from "@prisma/client";
+import db from "./db/db";
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  secret: process.env.AUTH_SECRET,
   adapter: PrismaAdapter(db),
   providers: [
     GitHub({
@@ -20,55 +22,73 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET,
     }),
     Credentials({
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
       async authorize(credentials) {
         const validatedFields = LogInSchema.safeParse(credentials);
 
-        if (!validatedFields.success) throw new Error("Invalid input format");
+        if (validatedFields.success) {
+          const { email, password } = validatedFields.data;
 
-        const { email, password } = validatedFields.data;
+          const { data: existingAccount } = (await api.accounts.getByProvider(
+            email
+          )) as ActionResponse<Account>;
 
-        // 查找用戶
-        const user = await db.user.findUnique({
-          where: { email },
-          include: { accounts: true },
-        });
-        if (!user) throw new Error("No user found with this email");
+          if (!existingAccount) return null;
 
-        // 取得儲存密碼的 account
-        const accountWithPassword = user.accounts.find(
-          (account) => account.provider === "credentials"
-        );
-        if (!accountWithPassword)
-          throw new Error("No credentials account found for thie user");
+          const { data: existingUser } = (await api.users.getById(
+            existingAccount.userId.toString()
+          )) as ActionResponse<User>;
 
-        // 驗證密碼
-        const isPasswordValid = await bcrypt.compare(
-          password,
-          accountWithPassword.password!
-        );
-        if (!isPasswordValid) throw new Error("Invalid password");
+          if (!existingUser) return null;
 
-        // 返回符合 User 類型的對象
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.image,
-        };
+          const isPasswordValid = await bcrypt.compare(
+            password,
+            existingAccount.password!
+          );
+          if (!isPasswordValid) {
+            console.error("Invalid password");
+            return null;
+          }
+
+          if (isPasswordValid) {
+            return {
+              id: existingUser.id,
+              name: existingUser.name,
+              email: existingUser.email,
+              image: existingUser.image,
+            };
+          }
+        }
+        return null;
       },
     }),
   ],
+  session: {
+    strategy: "database", // 使用數據庫作為會話存儲
+    maxAge: 30 * 24 * 60 * 60, // 30 天
+  },
   callbacks: {
     async session({ session, user }) {
-      session.user.id = user.id;
+      console.log("Session callback called");
+      console.log("Session before modification:", session);
+
+      if (user) {
+        session.user = {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          image: user.image || null,
+          emailVerified: user.emailVerified || null,
+        };
+      }
+
+      console.log("Session after modification:", session);
       return session;
     },
     async signIn({ user, account, profile }) {
-      if (account?.type === "credentials") return true;
+      console.log("Sign-in callback invoked");
+      if (account?.type === "credentials") {
+        return true;
+      }
       if (!account || !user) return false;
 
       const userInfo = {

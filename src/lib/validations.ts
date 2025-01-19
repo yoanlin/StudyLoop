@@ -63,3 +63,21 @@ export const AccountSchema = z.object({
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
 });
+
+export const UserSchema = z.object({
+  id: z.string().optional(),
+  email: z.string().email("Invalid email address"),
+  name: z.string().min(1, "Name is required"),
+  username: z
+    .string()
+    .min(4, { message: "Username must be at least 4 characters long." }),
+  image: z
+    .string()
+    .url({ message: "Please provide a valid URL." })
+    .optional()
+    .nullable(),
+  emailVerified: z.date().optional().nullable(),
+  providers: z.array(z.string()).default([]),
+  createdAt: z.date().default(() => new Date()),
+  updatedAt: z.date().default(() => new Date()),
+});

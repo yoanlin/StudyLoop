@@ -29,7 +29,10 @@ export async function LogInWithCredentials(
       },
     });
 
-    if (!existingUser) throw new NotFoundError("User");
+    if (!existingUser) {
+      console.error("User not found for email: ", email);
+      throw new NotFoundError("User");
+    }
 
     const accountWithPassword = existingUser.accounts[0];
     if (!accountWithPassword || !accountWithPassword.password) {
@@ -47,18 +50,17 @@ export async function LogInWithCredentials(
     }
 
     await signIn("credentials", { email, password, redirect: false });
-
     return { success: true };
   } catch (error) {
     console.error(error);
-    throw error;
+    return { success: false };
   }
 }
 export async function SignUpWithCredentials(formdata: AuthCredentials) {
   const validationResult = await action({ formdata, schema: SignUpSchema });
 
   if (validationResult instanceof Error) {
-    throw new Error(`Error: ${validationResult.message}`);
+    return { success: false, error: { message: validationResult.message } };
   }
 
   const { email, password, name, username } = validationResult.formdata!;
@@ -78,7 +80,7 @@ export async function SignUpWithCredentials(formdata: AuthCredentials) {
       const hashedPassword = await bcrypt.hash(password, 12);
 
       const newUser = await tx.user.create({
-        data: { email, name, username },
+        data: { email, name, username, image: null },
       });
 
       await tx.account.create({
@@ -90,13 +92,17 @@ export async function SignUpWithCredentials(formdata: AuthCredentials) {
           password: hashedPassword,
         },
       });
-
-      await signIn("credentials", { email, password, redirect: false });
-
-      return { success: true };
     });
+
+    await signIn("credentials", {
+      email,
+      password,
+      redirect: false,
+    });
+
+    return { success: true };
   } catch (error) {
     console.error(error);
-    throw error;
+    return { success: false };
   }
 }
