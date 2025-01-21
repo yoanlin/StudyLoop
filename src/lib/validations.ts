@@ -81,3 +81,14 @@ export const UserSchema = z.object({
   createdAt: z.date().default(() => new Date()),
   updatedAt: z.date().default(() => new Date()),
 });
+
+export const UploadPostSchema = z.object({
+  title: z
+    .string()
+    .min(1, "Title is required")
+    .max(100, "Title cannot exceed 100 characters"),
+  content: z
+    .string()
+    .min(10, "Content should contain more than ten characters"),
+  field: z.string().min(1, "You should select or create a field"),
+});

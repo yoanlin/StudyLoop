@@ -7,7 +7,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
     <div>
       <Navbar isMain />
       <LeftSidebar />
-      <section className="bg-background max-lg:ml-16 max-sm:ml-0">
+      <section className="bg-background max-lg:pl-16 max-sm:pl-0">
         {children}
       </section>
     </div>

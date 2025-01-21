@@ -3,6 +3,7 @@
 import { Button } from "./ui/button";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 
 const Hero = () => {
   const { resolvedTheme } = useTheme();
@@ -15,8 +16,11 @@ const Hero = () => {
         <p className="text-lg font-black sm:text-2xl lg:text-2xl xl:text-4xl">
           Found some valuable learning resources?
         </p>
-        <Button className="button w-full font-markaziText text-lg text-black sm:w-52 xl:px-10 xl:text-xl">
-          Share with the community
+        <Button
+          className="button w-full font-markaziText text-lg text-black sm:w-52 xl:px-10 xl:text-xl"
+          asChild
+        >
+          <Link href="/posts/upload">Share with the community</Link>
         </Button>
       </div>
 
