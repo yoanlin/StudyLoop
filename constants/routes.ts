@@ -9,6 +9,7 @@ const ROUTES = {
   SUBSCRIPTIONS: "/subscriptions",
   TRENDING: "/trending",
   LOG_IN_WITH_OAUTH: "login-with-oauth",
+  POST: (id: string) => `/posts/${id}`,
 };
 
 export default ROUTES;

@@ -10,8 +10,8 @@ datasource db {
 model Post {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String
-  authorID     String   @db.ObjectId
-  author       User     @relation("AuthorPosts",fields: [authorID], references: [id])
+  authorId     String   @db.ObjectId
+  author       User     @relation("AuthorPosts",fields: [authorId], references: [id])
   content      String
   fieldId      String   @db.ObjectId
   field        Field    @relation(fields: [fieldId], references: [id])
@@ -41,8 +41,9 @@ model User {
 
 model Field {
   id         String   @id @default(auto()) @map("_id") @db.ObjectId
-  name       String   @db.String
+  name       String   @db.String @unique
   posts      Post[]
+  postCount  Int      @default(0)
   subscriber UserSubscription[]
   createdAt DateTime @default(now())
 }

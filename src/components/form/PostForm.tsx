@@ -1,5 +1,5 @@
 "use client";
-import React, { useRef } from "react";
+import React, { useRef, useTransition } from "react";
 import {
   Form,
   FormControl,
@@ -10,20 +10,25 @@ import {
 } from "../ui/form";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { UploadPostSchema } from "@/lib/validations";
+import { CreatePostSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import dynamic from "next/dynamic";
+import { createPost } from "@/lib/actions/post.action";
+import { useRouter } from "next/navigation";
+import ROUTES from "../../../constants/routes";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
 const PostForm = () => {
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
 
-  const form = useForm<z.infer<typeof UploadPostSchema>>({
-    resolver: zodResolver(UploadPostSchema),
+  const form = useForm<z.infer<typeof CreatePostSchema>>({
+    resolver: zodResolver(CreatePostSchema),
     defaultValues: {
       title: "",
       field: "",
@@ -31,17 +36,27 @@ const PostForm = () => {
     },
   });
 
+  const handleCreatePost = async (data: z.infer<typeof CreatePostSchema>) => {
+    startTransition(async () => {
+      const result = await createPost(data);
+      if (result.data) router.push(ROUTES.POST(result.data?.id));
+    });
+  };
+
   return (
     <Form {...form}>
-      <form className="mt-10 h-screen space-y-10 pr-10">
+      <form
+        className="mt-10 h-screen space-y-10 pr-10"
+        onSubmit={form.handleSubmit(handleCreatePost)}
+      >
         <FormField
           control={form.control}
           name="title"
-          render={() => (
+          render={({ field }) => (
             <FormItem className="space-y-5">
               <FormLabel>Title</FormLabel>
               <FormControl>
-                <Input className="max-w-[800px]" />
+                <Input className="max-w-[800px]" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -81,7 +96,9 @@ const PostForm = () => {
             </FormItem>
           )}
         />
-        <Button className="button mt-10">Submit Post</Button>
+        <Button className="button mt-10" disabled={isPending}>
+          {isPending ? "Submitting..." : "Submit Post"}
+        </Button>
       </form>
     </Form>
   );

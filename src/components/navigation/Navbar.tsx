@@ -1,5 +1,5 @@
-"use client";
-import React, { useEffect, useState } from "react";
+// "use client";
+import React from "react";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import Searchbar from "./Searchbar";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "../ui/button";
 import UserAvatar from "../UserAvatar";
+import { auth } from "@/auth";
 
 interface Session {
   user: {
@@ -19,22 +20,23 @@ interface Session {
   expires: string;
 }
 
-const Navbar = ({ isMain }: { isMain?: boolean }) => {
-  const [session, setSession] = useState<Session | null>(null);
+const Navbar = async ({ isMain }: { isMain?: boolean }) => {
+  // const [session, setSession] = useState<Session | null>(null);
 
-  useEffect(() => {
-    async function fetchSession() {
-      try {
-        const response = await fetch("/api/fake-session");
-        if (!response.ok) throw new Error("Failed to fetch session");
-        const data = await response.json();
-        setSession(data);
-      } catch (error) {
-        console.error("Error fetching mock session: ", error);
-      }
-    }
-    fetchSession();
-  }, []);
+  // useEffect(() => {
+  //   async function fetchSession() {
+  //     try {
+  //       const response = await fetch("/api/fake-session");
+  //       if (!response.ok) throw new Error("Failed to fetch session");
+  //       const data = await response.json();
+  //       setSession(data);
+  //     } catch (error) {
+  //       console.error("Error fetching mock session: ", error);
+  //     }
+  //   }
+  //   fetchSession();
+  // }, []);
+  const session = await auth();
   return (
     <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 max-sm:h-16">
       <div className="flex cursor-pointer gap-5">

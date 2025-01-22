@@ -25,3 +25,14 @@ type ActionResponse<T = null> = {
   };
   status?: number;
 };
+
+interface CreatePostParams {
+  title: string;
+  field: string;
+  content: string;
+}
+
+interface RouteParams {
+  params: Promise<Record<string, string>>;
+  searchPrarams: Promise<Record<string, string>>;
+}
