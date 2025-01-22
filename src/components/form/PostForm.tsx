@@ -16,13 +16,19 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import dynamic from "next/dynamic";
-import { createPost } from "@/lib/actions/post.action";
+import { createPost, editPost } from "@/lib/actions/post.action";
 import { useRouter } from "next/navigation";
 import ROUTES from "../../../constants/routes";
+import { PostIncludeField } from "../../../types/global";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
-const PostForm = () => {
+interface Params {
+  post?: PostIncludeField;
+  isEdit?: boolean;
+}
+
+const PostForm = ({ post, isEdit = false }: Params) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
@@ -30,14 +36,19 @@ const PostForm = () => {
   const form = useForm<z.infer<typeof CreatePostSchema>>({
     resolver: zodResolver(CreatePostSchema),
     defaultValues: {
-      title: "",
-      field: "",
-      content: "",
+      title: post?.title || "",
+      field: post?.field.name || "",
+      content: post?.content || "",
     },
   });
 
   const handleCreatePost = async (data: z.infer<typeof CreatePostSchema>) => {
     startTransition(async () => {
+      if (isEdit && post) {
+        const result = await editPost({ postId: post?.id, ...data });
+        if (result.data) router.push(ROUTES.POST(result.data?.id));
+        return;
+      }
       const result = await createPost(data);
       if (result.data) router.push(ROUTES.POST(result.data?.id));
     });
@@ -97,7 +108,7 @@ const PostForm = () => {
           )}
         />
         <Button className="button mt-10" disabled={isPending}>
-          {isPending ? "Submitting..." : "Submit Post"}
+          {isPending ? "Submitting..." : <>{isEdit ? "Edit" : "Submit Post"}</>}
         </Button>
       </form>
     </Form>

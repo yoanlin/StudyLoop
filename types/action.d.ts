@@ -32,6 +32,14 @@ interface CreatePostParams {
   content: string;
 }
 
+interface EditPostParams extends CreatePostParams {
+  postId: string;
+}
+
+interface GetPostParams {
+  postId: string;
+}
+
 interface RouteParams {
   params: Promise<Record<string, string>>;
   searchPrarams: Promise<Record<string, string>>;

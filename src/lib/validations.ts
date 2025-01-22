@@ -85,10 +85,18 @@ export const UserSchema = z.object({
 export const CreatePostSchema = z.object({
   title: z
     .string()
-    .min(1, "Title is required")
-    .max(100, "Title cannot exceed 100 characters"),
-  field: z.string().min(1, "You should select or create a field"),
+    .min(1, { message: "Title is required" })
+    .max(100, { message: "Title cannot exceed 100 characters" }),
+  field: z.string().min(1, { message: "You should select or create a field" }),
   content: z
     .string()
-    .min(10, "Content should contain more than ten characters"),
+    .min(10, { message: "Content should contain more than ten characters" }),
+});
+
+export const EditPostSchema = CreatePostSchema.extend({
+  postId: z.string().min(1, { message: "Post ID is required" }),
+});
+
+export const GetPostSchema = z.object({
+  postId: z.string().min(1, { message: "Post ID is requried" }),
 });

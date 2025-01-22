@@ -7,7 +7,7 @@ const MainLayout = ({ children }: { children: ReactNode }) => {
     <div>
       <Navbar isMain />
       <LeftSidebar />
-      <section className="bg-background max-lg:pl-16 max-sm:pl-0">
+      <section className="bg-background max-lg:pl-16 max-sm:pl-0 lg:pl-[max(20rem,calc(100vw-60rem)/2)]">
         {children}
       </section>
     </div>
