@@ -56,7 +56,7 @@ const Navbar = async ({ isMain }: { isMain?: boolean }) => {
       </div>
       {isMain && (
         <>
-          <Searchbar />
+          <Searchbar route={"/"} placeholder="Search..." />
           <div className="flex items-center gap-3">
             <Search
               color="#c0c0c0"
