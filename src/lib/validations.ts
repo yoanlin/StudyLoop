@@ -100,3 +100,11 @@ export const EditPostSchema = CreatePostSchema.extend({
 export const GetPostSchema = z.object({
   postId: z.string().min(1, { message: "Post ID is requried" }),
 });
+
+export const PaginatedSearchParamsSchema = z.object({
+  query: z.string().optional(),
+  page: z.number().int().positive().default(1),
+  pageSize: z.number().int().positive().default(10),
+  filter: z.string().optional(),
+  sort: z.string().optional(),
+});

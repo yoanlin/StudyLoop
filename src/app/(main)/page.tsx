@@ -1,8 +1,21 @@
 import PostCard from "@/components/cards/PostCard";
 import FilterSelector from "@/components/FilterSelector";
 import Hero from "@/components/Hero";
+import { getPosts } from "@/lib/actions/post.action";
 
-export default function Home() {
+interface SearchParams {
+  searchParams: Promise<{ [key: string]: string }>;
+}
+
+export default async function Home({ searchParams }: SearchParams) {
+  const { query, page, pageSize, filter } = await searchParams;
+
+  const { success, data, error } = await getPosts({
+    query: query || "",
+    page: Number(page) || 1,
+    pageSize: Number(pageSize) || 10,
+    filter: filter || "",
+  });
   return (
     <div className="flex h-screen w-full flex-col items-center overflow-x-hidden">
       <main className="flex size-full flex-col pb-8">
@@ -18,15 +31,7 @@ export default function Home() {
             />
           </div>
 
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
-          <PostCard />
+          {success ? data?.posts[0].title : error?.message}
         </section>
       </main>
     </div>

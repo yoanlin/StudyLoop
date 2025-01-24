@@ -6,10 +6,12 @@ import {
   CreatePostSchema,
   EditPostSchema,
   GetPostSchema,
+  PaginatedSearchParamsSchema,
 } from "../validations";
 import db from "@/db/db";
 import { NotFoundError } from "../errors";
-import { PostIncludeField } from "../../../types/global";
+import { PaginatedSearchParams, PostIncludeField } from "../../../types/global";
+import { Prisma } from "@prisma/client";
 
 export async function createPost(
   formdata: CreatePostParams
@@ -184,6 +186,114 @@ export async function getPost(
       success: false,
       error: {
         message: error instanceof Error ? error.message : "Unknown error",
+      },
+    };
+  }
+}
+
+export async function getPosts(
+  params: PaginatedSearchParams
+): Promise<ActionResponse<{ posts: Post[]; isNext: boolean }>> {
+  const validationResult = await action({
+    formdata: params,
+    schema: PaginatedSearchParamsSchema,
+  });
+
+  if (validationResult instanceof Error)
+    return {
+      success: false,
+      error: { message: validationResult.message },
+    };
+
+  const { query, page = 1, pageSize = 10, filter } = params;
+
+  try {
+    // Pagination calculation
+    const skip = (Number(page) - 1) * pageSize;
+    const take = Number(pageSize);
+
+    // Query to get post IDs if "top_rated" is selected
+    let postIds: string[] = [];
+
+    if (filter === "top_rated") {
+      const postRatings = await db.comment.groupBy({
+        by: "postId",
+        _avg: {
+          rating: true,
+        },
+        orderBy: {
+          _avg: {
+            rating: "desc",
+          },
+        },
+        take,
+        skip,
+      });
+
+      postIds = postRatings.map((pr) => pr.postId);
+    }
+
+    // Construct where condition based on query string
+    let whereConditions: Prisma.PostWhereInput = {};
+
+    if (query) {
+      whereConditions = {
+        ...whereConditions,
+        OR: [
+          { title: { contains: query, mode: "insensitive" } },
+          { content: { contains: query, mode: "insensitive" } },
+        ],
+      };
+    }
+    if (filter === "top_rated" && postIds.length > 0) {
+      whereConditions.id = { in: postIds };
+    }
+
+    // Query posts based on the filter type (newest or top_rated)
+    const posts = await db.post.findMany({
+      where: whereConditions,
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        field: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        _count: {
+          select: { comments: true },
+        },
+        comments: {
+          select: {
+            rating: true,
+          },
+        },
+      },
+      orderBy: filter === "newest" ? { createdAt: "desc" } : undefined,
+      take,
+      skip,
+    });
+
+    // Check if there are more posts for pagination
+    const totalPosts = await db.post.count({ where: whereConditions });
+    const isNext = totalPosts > skip + posts.length;
+
+    return {
+      success: true,
+      data: { posts, isNext },
+    };
+  } catch (error) {
+    console.error("Error fetching posts: ", error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "unknown error",
       },
     };
   }
