@@ -28,16 +28,16 @@ const Hero = () => {
         <Image
           src="/treasure.png"
           alt="hero image"
-          width={450}
-          height={450}
-          className="w-[450px] shrink object-contain lg:w-[500px]"
+          width={600}
+          height={600}
+          className="w-[450px] shrink object-contain lg:w-[500px] xl:w-[600px]"
         />
       ) : (
         <Image
           src="/treasure-dark.png"
           alt="hero image"
-          width={450}
-          height={450}
+          width={600}
+          height={600}
           className="w-[450px] shrink object-contain lg:w-[500px] xl:w-[600px]"
         />
       )}

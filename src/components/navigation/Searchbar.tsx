@@ -8,9 +8,10 @@ import { formUrlQuery, removeKeysFromUrlQuery } from "@/lib/url";
 interface Props {
   route: string;
   placeholder: string;
+  otherClass?: string;
 }
 
-const Searchbar = ({ route, placeholder }: Props) => {
+const Searchbar = ({ route, placeholder, otherClass }: Props) => {
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -43,8 +44,7 @@ const Searchbar = ({ route, placeholder }: Props) => {
   }, [searchQuery, router, searchParams, route, pathname]);
   return (
     <div
-      className="flex w-1/3 items-center rounded-lg bg-white focus:border max-lg:hidden
-      "
+      className={`flex items-center rounded-lg bg-white focus:border ${otherClass}`}
     >
       <Search
         color="#c0c0c0"
@@ -53,7 +53,7 @@ const Searchbar = ({ route, placeholder }: Props) => {
       />
       <Input
         placeholder={`${placeholder}`}
-        className="border-none focus-visible:ring-transparent"
+        className="border-none shadow-none focus-visible:ring-transparent"
         onChange={(e) => {
           setSearchQuery(e.target.value);
         }}

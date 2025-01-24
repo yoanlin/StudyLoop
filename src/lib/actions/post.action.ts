@@ -279,7 +279,8 @@ export async function getPosts(
           },
         },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy:
+        filter === "newest" ? { createdAt: "desc" } : { createdAt: "asc" },
       take,
       skip,
     });
