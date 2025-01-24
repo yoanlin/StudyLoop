@@ -68,9 +68,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   callbacks: {
     async session({ session, user }) {
-      console.log("Session callback called");
-      console.log("Session before modification:", session);
-
       if (user) {
         session.user = {
           id: user.id,
@@ -81,11 +78,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
       }
 
-      console.log("Session after modification:", session);
       return session;
     },
     async signIn({ user, account, profile }) {
-      console.log("Sign-in callback invoked");
       if (account?.type === "credentials") {
         return true;
       }

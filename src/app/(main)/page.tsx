@@ -16,6 +16,9 @@ export default async function Home({ searchParams }: SearchParams) {
     pageSize: Number(pageSize) || 10,
     filter: filter || "",
   });
+
+  const { posts } = data || {};
+
   return (
     <div className="flex h-screen w-full flex-col items-center overflow-x-hidden">
       <main className="flex size-full flex-col pb-8">
@@ -31,7 +34,21 @@ export default async function Home({ searchParams }: SearchParams) {
             />
           </div>
 
-          {success ? data?.posts[0].title : error?.message}
+          {success ? (
+            <div className="w-full space-y-2 sm:space-y-4">
+              {posts && posts.length > 0 ? (
+                posts.map((post) => <PostCard key={post.id} post={post} />)
+              ) : (
+                <div>
+                  <p>No posts found</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div>
+              <p>{error?.message || "Failed to fetch posts"}</p>
+            </div>
+          )}
         </section>
       </main>
     </div>

@@ -10,7 +10,11 @@ import {
 } from "../validations";
 import db from "@/db/db";
 import { NotFoundError } from "../errors";
-import { PaginatedSearchParams, PostIncludeField } from "../../../types/global";
+import {
+  PaginatedSearchParams,
+  PostCardInfo,
+  PostIncludeField,
+} from "../../../types/global";
 import { Prisma } from "@prisma/client";
 
 export async function createPost(
@@ -193,7 +197,7 @@ export async function getPost(
 
 export async function getPosts(
   params: PaginatedSearchParams
-): Promise<ActionResponse<{ posts: Post[]; isNext: boolean }>> {
+): Promise<ActionResponse<{ posts: PostCardInfo[]; isNext: boolean }>> {
   const validationResult = await action({
     formdata: params,
     schema: PaginatedSearchParamsSchema,
@@ -275,7 +279,7 @@ export async function getPosts(
           },
         },
       },
-      orderBy: filter === "newest" ? { createdAt: "desc" } : undefined,
+      orderBy: { createdAt: "desc" },
       take,
       skip,
     });

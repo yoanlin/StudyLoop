@@ -11,3 +11,21 @@ interface PaginatedSearchParams {
   filter?: string;
   sort?: string;
 }
+
+interface PostCardInfo extends Post {
+  field: {
+    name: string;
+    id: string;
+  };
+  author: {
+    name: string;
+    id: string;
+    image: string | null;
+  };
+  comments: {
+    rating: number;
+  }[];
+  _count: {
+    comments: number;
+  };
+}
