@@ -1,5 +1,5 @@
-// "use client";
-import React from "react";
+"use client";
+import React, { useEffect, useRef, useState } from "react";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -8,35 +8,26 @@ import Searchbar from "./Searchbar";
 import { ThemeToggle } from "./ThemeToggle";
 import { Button } from "../ui/button";
 import UserAvatar from "../UserAvatar";
-import { auth } from "@/auth";
+import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
-interface Session {
-  user: {
-    id: string;
-    email: string;
-    name: string;
-    image?: string;
-  };
-  expires: string;
-}
+const Navbar = ({ isMain }: { isMain?: boolean }) => {
+  const { data: session, status } = useSession();
+  const [isExpanded, setIsExpanded] = useState(false);
+  const searchRef = useRef<HTMLDivElement>(null);
 
-const Navbar = async ({ isMain }: { isMain?: boolean }) => {
-  // const [session, setSession] = useState<Session | null>(null);
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        searchRef.current &&
+        !searchRef.current.contains(event.target as Node)
+      )
+        setIsExpanded(false);
+    }
 
-  // useEffect(() => {
-  //   async function fetchSession() {
-  //     try {
-  //       const response = await fetch("/api/fake-session");
-  //       if (!response.ok) throw new Error("Failed to fetch session");
-  //       const data = await response.json();
-  //       setSession(data);
-  //     } catch (error) {
-  //       console.error("Error fetching mock session: ", error);
-  //     }
-  //   }
-  //   fetchSession();
-  // }, []);
-  const session = await auth();
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
   return (
     <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 max-sm:h-16">
       <div className="flex cursor-pointer gap-5">
@@ -62,16 +53,30 @@ const Navbar = async ({ isMain }: { isMain?: boolean }) => {
             otherClass="max-lg:hidden lg:w-1/3"
           />
           <div className="flex items-center gap-3">
-            <Search
-              color="#c0c0c0"
-              strokeWidth={2.5}
-              className="ml-2 cursor-pointer lg:hidden"
-            />
+            <div ref={searchRef}>
+              <Search
+                color="#c0c0c0"
+                strokeWidth={2.5}
+                className={cn(
+                  "ml-2 cursor-pointer lg:hidden",
+                  isExpanded && "hidden"
+                )}
+                onClick={() => {
+                  setIsExpanded(true);
+                }}
+              />
+              <Searchbar
+                route="/"
+                placeholder="Search..."
+                otherClass={`${isExpanded ? "w-full" : "hidden"}`}
+              />
+            </div>
+
             <ThemeToggle />
 
-            {session?.user!.id ? (
+            {status === "authenticated" && session.user ? (
               <UserAvatar
-                id={session.user.id}
+                id={session.user.id!}
                 name={session.user.name!}
                 imageUrl={session.user.image}
               />

@@ -44,7 +44,7 @@ const Searchbar = ({ route, placeholder, otherClass }: Props) => {
   }, [searchQuery, router, searchParams, route, pathname]);
   return (
     <div
-      className={`flex items-center rounded-lg bg-white focus:border ${otherClass}`}
+      className={`flex items-center rounded-lg border bg-background focus:border ${otherClass}`}
     >
       <Search
         color="#c0c0c0"

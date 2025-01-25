@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Bowlby_One_SC, Markazi_Text } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./context/ThemeProvider";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/auth";
 
 const bowlbyOneSC = Bowlby_One_SC({
   variable: "--font-bowlbyOneSC",
@@ -23,25 +25,28 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${bowlbyOneSC.variable} ${markaziText.variable} antialiased`}
-      >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
+      <SessionProvider session={session}>
+        <body
+          className={`${bowlbyOneSC.variable} ${markaziText.variable} antialiased`}
         >
-          {children}
-        </ThemeProvider>
-      </body>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            {children}
+          </ThemeProvider>
+        </body>
+      </SessionProvider>
     </html>
   );
 }

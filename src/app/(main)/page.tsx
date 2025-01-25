@@ -21,7 +21,7 @@ export default async function Home({ searchParams }: SearchParams) {
   const { posts } = data || {};
 
   return (
-    <div className="flex h-screen w-full flex-col items-center overflow-x-hidden">
+    <div className="scrollbar-hide flex h-screen w-full flex-col items-center overflow-x-hidden">
       <main className="flex size-full flex-col pb-8">
         <Hero />
         <section className="mt-10 flex flex-col items-center gap-5 px-10 md:px-20 lg:max-w-3xl xl:max-w-5xl">

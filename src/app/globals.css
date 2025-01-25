@@ -193,3 +193,7 @@ h6 {
   --basePageBg: black;
   background: var(--basePageBg);
 }
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
