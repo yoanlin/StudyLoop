@@ -13,7 +13,7 @@ const PostCard = ({ post }: Props) => {
   const { title, field, comments, content, author, createdAt } = post;
   const averageRating = calcAverageRating(comments);
   return (
-    <div className="relative h-36 w-full rounded-lg border px-5 font-markaziText shadow sm:max-w-2xl">
+    <div className="relative h-36 w-full rounded-lg border px-5 font-markaziText shadow">
       <Link className="mt-5 block size-full" href={ROUTES.POST(post.id)}>
         <span className="rounded-lg bg-secondary px-3">{field.name}</span>
         <p className="absolute right-10 top-0 w-10 rounded-b-md bg-[#f5a340] py-2 text-center text-3xl font-black sm:right-14">

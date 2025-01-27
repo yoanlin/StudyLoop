@@ -4,8 +4,6 @@ import Searchbar from "@/components/navigation/Searchbar";
 import { getFields } from "@/lib/actions/field.action";
 import React from "react";
 import { SearchParams } from "../../../../types/global";
-import Image from "next/image";
-import Banner from "@/components/Banner";
 
 const FieldsPage = async ({ searchParams }: SearchParams) => {
   const { query, filter, page, pageSize } = await searchParams;

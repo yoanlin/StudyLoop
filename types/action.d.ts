@@ -42,5 +42,5 @@ interface GetPostParams {
 
 interface RouteParams {
   params: Promise<Record<string, string>>;
-  searchPrarams: Promise<Record<string, string>>;
+  searchParams: Promise<Record<string, string>>;
 }

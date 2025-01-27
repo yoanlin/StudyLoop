@@ -209,7 +209,13 @@ export async function getPosts(
       error: { message: validationResult.message },
     };
 
-  const { query, page = 1, pageSize = 10, filter } = params;
+  const {
+    query,
+    page = 1,
+    pageSize = 10,
+    filter,
+    sort: fieldId,
+  } = validationResult.formdata!;
 
   try {
     // Pagination calculation
@@ -249,6 +255,15 @@ export async function getPosts(
         ],
       };
     }
+
+    // Only posts belonging to the specified field are returned
+    if (fieldId) {
+      whereConditions = {
+        ...whereConditions,
+        fieldId,
+      };
+    }
+
     if (filter === "top_rated" && postIds.length > 0) {
       whereConditions.id = { in: postIds };
     }
