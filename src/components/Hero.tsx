@@ -23,24 +23,13 @@ const Hero = () => {
           <Link href="/posts/upload">Share with the community</Link>
         </Button>
       </div>
-
-      {resolvedTheme === "light" ? (
-        <Image
-          src="/treasure.png"
-          alt="hero image"
-          width={600}
-          height={600}
-          className="w-[450px] shrink object-contain lg:w-[500px] xl:w-[600px]"
-        />
-      ) : (
-        <Image
-          src="/treasure-dark.png"
-          alt="hero image"
-          width={600}
-          height={600}
-          className="w-[450px] shrink object-contain lg:w-[500px] xl:w-[600px]"
-        />
-      )}
+      <Image
+        src={resolvedTheme === "light" ? "/treasure.png" : "/treasure-dark.png"}
+        alt="hero image"
+        width={600}
+        height={600}
+        className="w-[450px] shrink object-contain lg:w-[500px] xl:w-[600px]"
+      />
     </section>
   );
 };

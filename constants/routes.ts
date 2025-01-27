@@ -10,6 +10,7 @@ const ROUTES = {
   TRENDING: "/trending",
   LOG_IN_WITH_OAUTH: "login-with-oauth",
   POST: (id: string) => `/posts/${id}`,
+  FIELD: (id: string) => `/fields/${id}`,
 };
 
 export default ROUTES;

@@ -29,3 +29,7 @@ interface PostCardInfo extends Post {
     comments: number;
   };
 }
+
+interface SearchParams {
+  searchParams: Promise<{ [key: string]: string }>;
+}
