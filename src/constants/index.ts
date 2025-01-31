@@ -10,11 +10,6 @@ export const sidebarLinks = [
     name: "All Fields",
   },
   {
-    imgURL: "/fire-icon.svg",
-    route: "/trending",
-    name: "Trending",
-  },
-  {
     imgURL: "/crown-icon.svg",
     route: "/leaderboard",
     name: "Learderboard",
