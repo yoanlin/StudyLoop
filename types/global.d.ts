@@ -1,7 +1,9 @@
-import { Field, Post } from "@prisma/client";
+import { Comment, Field, Post, User } from "@prisma/client";
 
-interface PostIncludeField extends Post {
+interface GetPostOutput extends Post {
   field: Field;
+  author: User;
+  comments: Comment[];
 }
 
 interface PaginatedSearchParams {

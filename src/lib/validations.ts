@@ -108,3 +108,7 @@ export const PaginatedSearchParamsSchema = z.object({
   filter: z.string().optional(),
   sort: z.string().optional(),
 });
+
+export const GetCommentSchema = z.object({
+  postId: z.string().min(1, { message: "Post ID is required" }),
+});

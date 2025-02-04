@@ -13,7 +13,7 @@ import { NotFoundError } from "../errors";
 import {
   PaginatedSearchParams,
   PostCardInfo,
-  PostIncludeField,
+  GetPostOutput,
 } from "../../../types/global";
 import { Prisma } from "@prisma/client";
 
@@ -163,7 +163,7 @@ export async function editPost(
 
 export async function getPost(
   formdata: GetPostParams
-): Promise<ActionResponse<PostIncludeField>> {
+): Promise<ActionResponse<GetPostOutput>> {
   const validationResult = await action({
     formdata,
     schema: GetPostSchema,
@@ -178,7 +178,7 @@ export async function getPost(
   try {
     const post = await db.post.findUnique({
       where: { id: postId },
-      include: { field: true },
+      include: { field: true, author: true, comments: true },
     });
 
     if (!post) throw new Error("Post not found");
