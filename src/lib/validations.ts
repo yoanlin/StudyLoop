@@ -123,3 +123,7 @@ export const CreateCommentSchema = z.object({
     .positive()
     .max(10, { message: "Rating must not higher than 10" }),
 });
+
+export const CommentServerSchema = CreateCommentSchema.extend({
+  postId: z.string().min(1, { message: "Post ID is required." }),
+});

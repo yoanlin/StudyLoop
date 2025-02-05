@@ -1,6 +1,13 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../ui/form";
 import { z } from "zod";
 import { CreateCommentSchema } from "@/lib/validations";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,8 +16,11 @@ import { Textarea } from "../ui/textarea";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { Button } from "../ui/button";
+import { useTransition } from "react";
+import { createComment } from "@/lib/actions/comment.action";
 
-const Comment = () => {
+const Comment = ({ postId }: { postId: string }) => {
+  const [isCommenting, startCommentingTransition] = useTransition();
   const { data, status } = useSession();
   const form = useForm<z.infer<typeof CreateCommentSchema>>({
     resolver: zodResolver(CreateCommentSchema),
@@ -18,7 +28,21 @@ const Comment = () => {
       content: "",
       rating: 0,
     },
+    mode: "onChange",
   });
+
+  const handleSubmit = async (values: z.infer<typeof CreateCommentSchema>) => {
+    startCommentingTransition(async () => {
+      const result = await createComment({
+        postId,
+        content: values.content,
+        rating: values.rating,
+      });
+
+      if (result.success) form.reset();
+    });
+  };
+
   return (
     <div>
       {data?.user && status === "authenticated" && (
@@ -34,24 +58,29 @@ const Comment = () => {
         </>
       )}
       <Form {...form}>
-        <form className="space-y-5">
+        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
           <FormField
             control={form.control}
             name="rating"
             render={({ field }) => (
               <FormItem className="space-x-4">
-                <FormLabel className="text-xl">Rating:</FormLabel>
                 <FormControl>
-                  <div className="inline-block">
+                  <div className="mt-2 flex items-center gap-5">
+                    <FormLabel className="text-xl">Rating:</FormLabel>
                     <Input
-                      className="inline-block h-10 w-20"
+                      className="inline-block h-10 w-14"
                       type="tel"
                       max={10}
                       min={1}
                       placeholder="1 ~ 10"
                       {...field}
+                      {...form.register("rating", {
+                        setValueAs: (value) =>
+                          value === "" ? undefined : Number(value),
+                      })}
                     />
                     <span> / 10</span>
+                    <FormMessage className="inline-block text-xl" />
                   </div>
                 </FormControl>
               </FormItem>
@@ -69,11 +98,15 @@ const Comment = () => {
                     {...field}
                   ></Textarea>
                 </FormControl>
+                <FormMessage className="text-xl" />
               </FormItem>
             )}
           />
-          <Button className="button absolute right-10 top-[110px] w-24 text-lg md:px-14 md:text-xl">
-            Comment
+          <Button
+            type="submit"
+            className="button absolute right-10 top-[100px] w-24 text-lg md:px-14 md:text-xl"
+          >
+            {isCommenting ? "Posting..." : "Comment"}
           </Button>
         </form>
       </Form>

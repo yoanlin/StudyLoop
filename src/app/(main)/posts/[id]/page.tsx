@@ -48,8 +48,8 @@ const PostDetails = async ({ params }: RouteParams) => {
           <p className="border-y px-10 py-5">{data.content}</p>
         </div>
 
-        <div className="relative mt-20 rounded-lg border px-10 py-6">
-          <Comment />
+        <div className="relative mt-20 rounded-lg border px-10 py-6 text-2xl">
+          <Comment postId={data.id} />
         </div>
       </div>
     );

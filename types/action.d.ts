@@ -48,3 +48,9 @@ interface RouteParams {
 interface GetCommentsParams {
   postId: string;
 }
+
+interface CreateCommentParams {
+  postId: string;
+  content: string;
+  rating: number;
+}
