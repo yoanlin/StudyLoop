@@ -33,10 +33,17 @@ import {
 interface Props {
   value: string;
   fieldChange: (value: string) => void;
+  otherClass?: string;
   editorRef: ForwardedRef<MDXEditorMethods> | null;
 }
 
-const Editor = ({ value, editorRef, fieldChange, ...props }: Props) => {
+const Editor = ({
+  value,
+  editorRef,
+  otherClass,
+  fieldChange,
+  ...props
+}: Props) => {
   useEffect(() => {
     const popup = document.querySelector(".mdxeditor-popup-container");
     if (popup) {
@@ -46,7 +53,7 @@ const Editor = ({ value, editorRef, fieldChange, ...props }: Props) => {
   return (
     <MDXEditor
       markdown={value}
-      className="dark-editor prose min-h-[400px] max-w-[800px] rounded-md border"
+      className={`dark-editor prose rounded-md border ${otherClass}`}
       onChange={fieldChange}
       plugins={[
         // Example Plugin Usage

@@ -112,3 +112,14 @@ export const PaginatedSearchParamsSchema = z.object({
 export const GetCommentSchema = z.object({
   postId: z.string().min(1, { message: "Post ID is required" }),
 });
+
+export const CreateCommentSchema = z.object({
+  content: z
+    .string()
+    .min(10, { message: "Comment must be at least 10 characters" }),
+  rating: z
+    .number()
+    .int()
+    .positive()
+    .max(10, { message: "Rating must not higher than 10" }),
+});

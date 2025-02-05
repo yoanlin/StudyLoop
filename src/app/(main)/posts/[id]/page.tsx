@@ -16,7 +16,7 @@ const PostDetails = async ({ params }: RouteParams) => {
     );
     return (
       <div className="mt-10 max-w-5xl px-10 font-markaziText text-xl">
-        <div className="space-y-3">
+        <div className="space-y-5">
           <Link
             href={ROUTES.FIELD(data.fieldId)}
             className="inline-block rounded-lg bg-secondary px-3"
@@ -33,7 +33,7 @@ const PostDetails = async ({ params }: RouteParams) => {
             </span>
           </h2>
 
-          <div>
+          <Link href={`/user/${data.author.id}`}>
             <Image
               src={data.author.image ? data.author.image : "/fb-Avatar.png"}
               alt="avatar"
@@ -41,14 +41,16 @@ const PostDetails = async ({ params }: RouteParams) => {
               height={20}
               className="inline-block rounded-full"
             />
-            <Link href={`/user/${data.author.id}`} className="ml-3">
+            <p className="ml-3 inline-block">
               {data.author.name} - {getTimeStamp(data.createdAt)}
-            </Link>
-            <p className="mt-10 border-y px-10 py-5">{data.content}</p>
-          </div>
+            </p>
+          </Link>
+          <p className="border-y px-10 py-5">{data.content}</p>
         </div>
 
-        <Comment />
+        <div className="relative mt-20 rounded-lg border px-10 py-6">
+          <Comment />
+        </div>
       </div>
     );
   } else

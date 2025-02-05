@@ -19,12 +19,12 @@ import dynamic from "next/dynamic";
 import { createPost, editPost } from "@/lib/actions/post.action";
 import { useRouter } from "next/navigation";
 import ROUTES from "../../../constants/routes";
-import { PostIncludeField } from "../../../types/global";
+import { GetPostOutput } from "../../../types/global";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
 interface Params {
-  post?: PostIncludeField;
+  post?: GetPostOutput;
   isEdit?: boolean;
 }
 
@@ -101,6 +101,7 @@ const PostForm = ({ post, isEdit = false }: Params) => {
                   editorRef={editorRef}
                   value={field.value}
                   fieldChange={field.onChange}
+                  otherClass="min-h-[400px] max-w-[800px]"
                 />
               </FormControl>
               <FormMessage />
