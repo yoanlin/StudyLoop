@@ -35,3 +35,10 @@ interface PostCardInfo extends Post {
 interface SearchParams {
   searchParams: Promise<{ [key: string]: string }>;
 }
+
+interface GetCommentsOutput extends Comment {
+  createdBy: {
+    name: string;
+    image: string | null;
+  };
+}

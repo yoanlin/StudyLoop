@@ -55,8 +55,7 @@ const PostDetails = ({ author, createdAt }: DetailsProps) => {
         />
         <span>{author.name}</span>
       </div>
-      <p>-</p>
-      <p>{getTimeStamp(createdAt)}</p>
+      <p className="text-muted">{getTimeStamp(createdAt)}</p>
     </div>
   );
 };

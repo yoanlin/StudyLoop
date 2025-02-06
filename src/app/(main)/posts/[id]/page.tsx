@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import ROUTES from "../../../../../constants/routes";
+import AllComments from "@/components/AllComments";
 
 const PostDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -15,7 +16,7 @@ const PostDetails = async ({ params }: RouteParams) => {
       data.comments.map((comment) => ({ rating: comment.rating }))
     );
     return (
-      <div className="mt-10 max-w-5xl px-10 font-markaziText text-xl">
+      <div className="max-w-5xl p-10 font-markaziText text-xl">
         <div className="space-y-5">
           <Link
             href={ROUTES.FIELD(data.fieldId)}
@@ -45,12 +46,16 @@ const PostDetails = async ({ params }: RouteParams) => {
               {data.author.name} - {getTimeStamp(data.createdAt)}
             </p>
           </Link>
-          <p className="border-y px-10 py-5">{data.content}</p>
+          <p className="px-10 py-5">{data.content}</p>
         </div>
 
-        <div className="relative mt-20 rounded-lg border px-10 py-6 text-2xl">
-          <Comment postId={data.id} />
+        <div className="relative mt-20 rounded-lg border px-10 py-6 text-2xl shadow">
+          <Comment postId={id} />
         </div>
+
+        <section className="mt-10">
+          <AllComments postId={id} />
+        </section>
       </div>
     );
   } else

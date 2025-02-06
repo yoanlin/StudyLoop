@@ -96,7 +96,8 @@ const Comment = ({ postId }: { postId: string }) => {
                   <Textarea
                     className="h-28 resize-none text-xl focus-visible:ring-transparent"
                     {...field}
-                  ></Textarea>
+                    onBlur={() => form.trigger("content")}
+                  />
                 </FormControl>
                 <FormMessage className="text-xl" />
               </FormItem>
