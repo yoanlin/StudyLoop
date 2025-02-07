@@ -3,10 +3,7 @@ import FilterSelector from "@/components/FilterSelector";
 import Hero from "@/components/Hero";
 import Searchbar from "@/components/navigation/Searchbar";
 import { getPosts } from "@/lib/actions/post.action";
-
-interface SearchParams {
-  searchParams: Promise<{ [key: string]: string }>;
-}
+import { SearchParams } from "../../../types/global";
 
 export default async function Home({ searchParams }: SearchParams) {
   const { query, page, pageSize, filter } = await searchParams;

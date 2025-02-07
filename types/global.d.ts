@@ -42,3 +42,13 @@ interface GetCommentsOutput extends Comment {
     image: string | null;
   };
 }
+
+interface UserWithPostCount {
+  id: string;
+  name: string;
+  username: string;
+  image: string | null;
+  _count: {
+    posts: number;
+  };
+}
