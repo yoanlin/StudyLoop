@@ -11,11 +11,11 @@ const LeaderboardPage = async ({ searchParams }: SearchParams) => {
   });
   if (success && data) {
     return (
-      <div className="p-10">
+      <div className="p-10 sm:ml-20">
         <Searchbar
           route="/leaderboard"
-          placeholder={"Search for users"}
-          otherClass="max-w-2xl"
+          placeholder="Search for user"
+          otherClass="max-w-2xl h-12"
         />
         <h2 className="mt-8 font-bowlbyOneSC text-2xl">LEADERBOARD</h2>
 
@@ -30,7 +30,7 @@ const LeaderboardPage = async ({ searchParams }: SearchParams) => {
     );
   } else {
     <div>
-      <p>{error?.message || "Failed to fetch posts"}</p>
+      <p>{error?.message || "Failed to fetch user"}</p>
     </div>;
   }
 };
