@@ -3,8 +3,9 @@
 import { Field, Prisma } from "@prisma/client";
 import { PaginatedSearchParams } from "../../../types/global";
 import action from "../handlers/action";
-import { PaginatedSearchParamsSchema } from "../validations";
+import { PaginatedSearchParamsSchema, SubscribeSchema } from "../validations";
 import db from "@/db/db";
+import { NotFoundError } from "../errors";
 
 export async function getFields(
   params: PaginatedSearchParams
@@ -63,6 +64,52 @@ export async function getFields(
       success: false,
       error: {
         message: error instanceof Error ? error.message : "unknown error",
+      },
+    };
+  }
+}
+
+export async function toggleFieldSubscription(
+  params: SubscribeParams
+): Promise<ActionResponse<{ isSubscribed: boolean }>> {
+  const validationResult = await action({
+    formdata: params,
+    schema: SubscribeSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return { success: false, error: { message: validationResult.message } };
+
+  const { fieldId } = validationResult.formdata!;
+  const userId = validationResult.session?.user?.id;
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    const field = await db.field.findUnique({
+      where: { id: fieldId },
+    });
+    if (!field) throw new Error("Field not found");
+
+    const existingSubscription = await db.userSubscription.findFirst({
+      where: { userId, fieldId },
+    });
+
+    if (existingSubscription) {
+      await db.userSubscription.delete({
+        where: { id: existingSubscription.id },
+      });
+      return { success: true, data: { isSubscribed: false } };
+    } else {
+      await db.userSubscription.create({ data: { userId, fieldId } });
+      return { success: true, data: { isSubscribed: true } };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown error",
       },
     };
   }

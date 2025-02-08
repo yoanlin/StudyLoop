@@ -54,3 +54,7 @@ interface CreateCommentParams {
   content: string;
   rating: number;
 }
+
+interface SubscribeParams {
+  fieldId: string;
+}

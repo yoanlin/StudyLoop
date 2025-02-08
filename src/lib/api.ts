@@ -33,4 +33,10 @@ export const api = {
       }),
     getById: (id: string) => fetchHandler(`${API_BASE_URL}/users/${id}`),
   },
+  subscriptions: {
+    checkSubscription: (userId: string, fieldId: string) =>
+      fetchHandler(
+        `${API_BASE_URL}/subscriptions/check?userId=${userId}&fieldId=${fieldId}`
+      ),
+  },
 };

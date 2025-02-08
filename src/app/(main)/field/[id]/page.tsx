@@ -1,6 +1,7 @@
 import PostCard from "@/components/cards/PostCard";
 import FilterSelector from "@/components/FilterSelector";
 import Searchbar from "@/components/navigation/Searchbar";
+import SubscribeButton from "@/components/SubscribeButton";
 import { getPosts } from "@/lib/actions/post.action";
 import React from "react";
 
@@ -33,16 +34,23 @@ const FieldPage = async ({ params, searchParams }: RouteParams) => {
           ]}
         />
       </div>
-      {success ? (
-        <div className="mt-10 max-w-4xl space-y-2 sm:space-y-4">
-          {posts && posts.length > 0 ? (
+      {success && posts ? (
+        <section className="mt-10 max-w-4xl space-y-2 sm:space-y-4">
+          <div className="flex gap-5">
+            <h2 className="font-bowlbyOneSC text-2xl">
+              {posts[0].field.name.toUpperCase()}
+            </h2>
+            <SubscribeButton fieldId={posts[0].fieldId} />
+          </div>
+
+          {posts.length > 0 ? (
             posts.map((post) => <PostCard key={post.id} post={post} />)
           ) : (
             <div>
               <p>No posts found</p>
             </div>
           )}
-        </div>
+        </section>
       ) : (
         <div>
           <p>{error?.message || "Failed to fetch posts"}</p>
