@@ -23,11 +23,9 @@ const FieldCard = ({ fieldInfo }: Props) => {
           alt="chestbox"
           width={45}
           height={45}
-          className="justify-self-start object-contain"
+          className="h-auto justify-self-start object-contain"
         />
-        <p className="line-clamp-1 text-center font-bold xl:text-xl">
-          {fieldInfo.name}
-        </p>
+        <p className="line-clamp-1 text-center font-bold">{fieldInfo.name}</p>
       </div>
     </Link>
   );

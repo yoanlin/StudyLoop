@@ -8,7 +8,13 @@ import { Button } from "./ui/button";
 import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 
-const SubscribeButton = ({ fieldId }: { fieldId: string }) => {
+const SubscribeButton = ({
+  fieldId,
+  otherClass,
+}: {
+  fieldId: string;
+  otherClass?: string;
+}) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
@@ -19,13 +25,15 @@ const SubscribeButton = ({ fieldId }: { fieldId: string }) => {
       if (!userId) return;
 
       try {
+        console.log("try to get response...");
         const response = (await api.subscriptions.checkSubscription(
           userId,
           fieldId
         )) as ActionResponse<{ isSubscribed: boolean }>;
 
+        console.log("API Response: ", response);
+
         if (response.success && response.data) {
-          console.log(response.data.isSubscribed);
           setIsSubscribed(response.data.isSubscribed);
         }
       } catch (error) {
@@ -52,18 +60,18 @@ const SubscribeButton = ({ fieldId }: { fieldId: string }) => {
   };
 
   return (
-    <div className={cn(!session && "hidden")}>
+    <div className={cn(!session && "hidden", otherClass)}>
       <Button
         className={cn(
           "font-markaziText text-lg",
           isSubscribed
             ? "border-2 bg-white text-foreground shadow-none dark:bg-black"
-            : "button"
+            : "bg-gray-300 hover:bg-gray-400"
         )}
         onClick={handleToggleSubscription}
         disabled={loading}
       >
-        {isSubscribed ? "Unsubscribe" : "Subscribe"}
+        {isSubscribed ? "Subscribed✔️" : "Subscribe"}
       </Button>
     </div>
   );

@@ -114,3 +114,54 @@ export async function toggleFieldSubscription(
     };
   }
 }
+
+export async function getSubscribedFields(params: PaginatedSearchParams) {
+  const validationResult = await action({
+    formdata: params,
+    schema: PaginatedSearchParamsSchema,
+    authorize: true,
+  });
+  if (validationResult instanceof Error)
+    return { success: false, error: { message: validationResult.message } };
+
+  const { query, page = 1, pageSize = 12 } = validationResult.formdata!;
+
+  const userId = validationResult.session?.user?.id;
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const whereConditions: any = { userId };
+
+    if (query) {
+      whereConditions.field = {
+        name: { contains: query, mode: "insensitive" },
+      };
+    }
+    const subscribedFields = await db.userSubscription.findMany({
+      where: whereConditions,
+      include: { field: true },
+      take: pageSize,
+      skip: (page - 1) * pageSize,
+    });
+
+    const totalCount = await db.userSubscription.count({
+      where: whereConditions,
+    });
+    const isNext = totalCount > page * pageSize;
+
+    return {
+      success: true,
+      data: { fields: subscribedFields.map((sub) => sub.field) },
+      isNext,
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown Error",
+      },
+    };
+  }
+}

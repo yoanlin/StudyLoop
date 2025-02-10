@@ -6,6 +6,7 @@ import Link from "next/link";
 import React from "react";
 import ROUTES from "../../../../../constants/routes";
 import AllComments from "@/components/AllComments";
+import SubscribeButton from "@/components/SubscribeButton";
 
 const PostDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -20,11 +21,11 @@ const PostDetails = async ({ params }: RouteParams) => {
         <div className="space-y-5">
           <Link
             href={ROUTES.FIELD(data.fieldId)}
-            className="inline-block rounded-lg bg-secondary px-3"
+            className="mr-5 inline-block rounded-lg bg-secondary px-3 py-1"
           >
             {data.field.name}{" "}
           </Link>
-          <span className="ml-5">+ subscribe</span>
+          <SubscribeButton fieldId={data.fieldId} otherClass="inline-block" />
           <h2 className="font-bowlbyOneSC text-2xl">
             {data.title.toUpperCase()}{" "}
             <span className="font-markaziText">

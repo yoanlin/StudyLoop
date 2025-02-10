@@ -5,7 +5,7 @@ import Image from "next/image";
 
 const LeftSidebar = () => {
   return (
-    <section className="fixed left-0 top-0 flex h-full flex-col bg-background font-markaziText max-lg:w-auto max-sm:hidden lg:w-[max(20rem,calc(100vw-60rem)/2)] lg:justify-around">
+    <section className="fixed left-0 top-0 flex h-full flex-col border-r bg-background font-markaziText max-lg:w-auto max-sm:hidden lg:w-[max(20rem,calc(100vw-60rem)/2)] lg:justify-between">
       <NavLinks />
 
       <UserSection />

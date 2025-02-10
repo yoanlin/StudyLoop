@@ -38,7 +38,7 @@ const Navbar = ({ isMain }: { isMain?: boolean }) => {
             alt="logo"
             width={50}
             height={50}
-            className="-translate-y-1"
+            className="size-auto -translate-y-1"
           />
           <h1 className="font-bowlbyOneSC text-3xl max-sm:hidden">
             Study Loop

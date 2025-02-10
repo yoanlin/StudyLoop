@@ -7,15 +7,27 @@ export async function GET(req: Request) {
     const userId = searchParams.get("userId");
     const fieldId = searchParams.get("fieldId");
 
-    if (!userId || !fieldId) return NextResponse.json({ isSubscribed: false });
+    if (!userId || !fieldId)
+      return NextResponse.json({
+        success: false,
+        error: { message: "Invalid input" },
+      });
 
     const existingSubscription = await db.userSubscription.findFirst({
       where: { userId, fieldId },
     });
 
-    return NextResponse.json({ isSubscribe: !!existingSubscription });
+    return NextResponse.json({
+      success: true,
+      data: { isSubscribed: !!existingSubscription },
+    });
   } catch (error) {
     console.error("Error checking subscription: ", error);
-    return NextResponse.json({ isSubscribed: false });
+    return NextResponse.json({
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+    });
   }
 }

@@ -6,14 +6,17 @@ import { usePathname } from "next/navigation";
 import React from "react";
 import { SheetClose } from "../ui/sheet";
 import { cn } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 const UserSection = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
   const pathname = usePathname();
+  const { data } = useSession();
   return (
     <div
       className={cn(
-        "mt-5 flex flex-col",
-        isMobileNav ? "items-start" : "items-end"
+        "flex flex-col",
+        isMobileNav ? "items-start" : "items-end",
+        !data?.user && "hidden"
       )}
     >
       <h3 className="cursor-default self-center text-xl xl:self-end xl:pr-36">
