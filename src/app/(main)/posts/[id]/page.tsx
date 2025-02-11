@@ -7,6 +7,7 @@ import React from "react";
 import ROUTES from "../../../../../constants/routes";
 import AllComments from "@/components/AllComments";
 import SubscribeButton from "@/components/SubscribeButton";
+import CollectButton from "@/components/CollectButton";
 
 const PostDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -47,7 +48,8 @@ const PostDetails = async ({ params }: RouteParams) => {
               {data.author.name} - {getTimeStamp(data.createdAt)}
             </p>
           </Link>
-          <p className="px-10 py-5">{data.content}</p>
+          <p className="relative px-10 py-5">{data.content}</p>
+          <CollectButton postId={id} />
         </div>
 
         <div className="relative mt-20 rounded-lg border px-10 py-6 text-2xl shadow">

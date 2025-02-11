@@ -131,3 +131,7 @@ export const CommentServerSchema = CreateCommentSchema.extend({
 export const SubscribeSchema = z.object({
   fieldId: z.string().min(1, { message: "field ID is required." }),
 });
+
+export const CollectionSchema = z.object({
+  postId: z.string().min(1, { message: "post ID is required." }),
+});

@@ -58,3 +58,7 @@ interface CreateCommentParams {
 interface SubscribeParams {
   fieldId: string;
 }
+
+interface CollectionParams {
+  postId: string;
+}

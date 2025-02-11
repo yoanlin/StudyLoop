@@ -3,6 +3,7 @@
 import { Post } from "@prisma/client";
 import action from "../handlers/action";
 import {
+  CollectionSchema,
   CreatePostSchema,
   EditPostSchema,
   GetPostSchema,
@@ -314,6 +315,49 @@ export async function getPosts(
       success: false,
       error: {
         message: error instanceof Error ? error.message : "unknown error",
+      },
+    };
+  }
+}
+
+export async function toggleSavePost(
+  params: CollectionParams
+): Promise<ActionResponse<{ isSaved: boolean }>> {
+  const validationResult = await action({
+    formdata: params,
+    schema: CollectionSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return { success: false, error: { message: validationResult.message } };
+
+  const { postId } = validationResult.formdata!;
+  const userId = validationResult.session?.user?.id;
+
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    const post = await db.post.findUnique({ where: { id: postId } });
+    if (!post) throw new NotFoundError("Post");
+
+    const existingCollection = await db.postCollector.findFirst({
+      where: { postId, userId },
+    });
+
+    if (existingCollection) {
+      await db.postCollector.delete({ where: { id: existingCollection.id } });
+      return { success: true, data: { isSaved: false } };
+    } else {
+      await db.postCollector.create({ data: { userId, postId } });
+      return { success: true, data: { isSaved: true } };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown error",
       },
     };
   }

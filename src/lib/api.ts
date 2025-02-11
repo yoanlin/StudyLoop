@@ -39,4 +39,10 @@ export const api = {
         `${API_BASE_URL}/subscriptions/check?userId=${userId}&fieldId=${fieldId}`
       ),
   },
+  collections: {
+    checkCollections: (userId: string, postId: string) =>
+      fetchHandler(
+        `${API_BASE_URL}/collections/check?userId=${userId}&postId=${postId}`
+      ),
+  },
 };
