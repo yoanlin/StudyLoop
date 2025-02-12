@@ -13,7 +13,7 @@ const SubscriptionPage = async ({ searchParams }: SearchParams) => {
   });
   const { fields } = data || {};
   return (
-    <div className="mt-10 w-full max-w-2xl px-10 text-2xl sm:ml-20 lg:max-w-4xl">
+    <div className="mt-10 w-full max-w-3xl px-10 text-2xl sm:ml-20 ">
       <Searchbar
         route="/subscriptions"
         placeholder="Search for field"

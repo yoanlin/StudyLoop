@@ -362,3 +362,103 @@ export async function toggleSavePost(
     };
   }
 }
+
+export async function getCollectedPosts(
+  params: PaginatedSearchParams
+): Promise<ActionResponse<{ posts: PostCardInfo[]; isNext: boolean }>> {
+  const validationResult = await action({
+    formdata: params,
+    schema: PaginatedSearchParamsSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return {
+      success: false,
+      error: { message: validationResult.message },
+    };
+
+  const { query, page = 1, pageSize = 10, filter } = validationResult.formdata!;
+
+  const userId = validationResult.session?.user?.id;
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    const skip = (Number(page) - 1) * pageSize;
+    const take = Number(pageSize);
+
+    // Get all collected post IDs
+    const collectedPostIds = await db.postCollector.findMany({
+      where: { userId },
+      select: { postId: true },
+    });
+
+    const postIds = collectedPostIds.map((p) => p.postId);
+    if (postIds.length === 0)
+      return { success: true, data: { posts: [], isNext: false } };
+
+    // Calculate average rating for posts that have comments
+    const postRatingsMap = new Map<string, number>();
+
+    if (filter === "top_rated") {
+      const postRatings = await db.comment.groupBy({
+        by: ["postId"],
+        _avg: { rating: true },
+        where: { postId: { in: postIds } }, // Only look at collected posts
+      });
+
+      postRatings.forEach((pr) => {
+        postRatingsMap.set(pr.postId, pr._avg.rating ?? 0);
+      });
+
+      // Ensure posts with no comments have rating = 0
+      postIds.forEach((id) => {
+        if (!postRatingsMap.has(id)) postRatingsMap.set(id, 0);
+      });
+
+      // Sort postIds by average rating descending
+      postIds.sort((a, b) => postRatingsMap.get(b)! - postRatingsMap.get(a)!);
+    }
+
+    // Construct where conditions
+    const whereConditions: Prisma.PostWhereInput = { id: { in: postIds } };
+
+    if (query) {
+      whereConditions.OR = [
+        { title: { contains: query, mode: "insensitive" } },
+        { content: { contains: query, mode: "insensitive" } },
+      ];
+    }
+
+    // Fetch collected posts in correct order
+    const posts = await db.post.findMany({
+      where: whereConditions,
+      include: {
+        author: {
+          select: { id: true, name: true, image: true },
+        },
+        field: {
+          select: { id: true, name: true },
+        },
+        _count: { select: { comments: true } },
+        comments: { select: { rating: true } },
+      },
+      orderBy:
+        filter === "newest" ? { createdAt: "desc" } : { createdAt: "asc" },
+      take,
+      skip,
+    });
+
+    const isNext = postIds.length > skip + posts.length;
+
+    return { success: true, data: { posts, isNext } };
+  } catch (error) {
+    console.error("Error fetching collected posts: ", error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "unknown error",
+      },
+    };
+  }
+}
