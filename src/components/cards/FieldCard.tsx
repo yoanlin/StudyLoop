@@ -14,7 +14,7 @@ const FieldCard = ({ fieldInfo }: Props) => {
   return (
     <Link
       href={ROUTES.FIELD(fieldInfo.id)}
-      className="block h-14 w-full rounded-xl border bg-stone-100 font-markaziText shadow hover:bg-stone-200 dark:bg-neutral-800 dark:hover:bg-neutral-900 sm:w-2/5"
+      className="block h-14 w-full rounded-xl border bg-stone-100 font-markaziText shadow hover:bg-stone-200 dark:bg-neutral-800 dark:hover:bg-neutral-900 lg:w-[30%]"
       onClick={() => setIsCilcked(true)}
     >
       <div className="flex size-full items-center gap-3 px-2">

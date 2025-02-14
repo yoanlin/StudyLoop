@@ -1,7 +1,7 @@
 "use server";
 
 import { Field, Prisma } from "@prisma/client";
-import { PaginatedSearchParams } from "../../../types/global";
+import { PaginatedSearchParams, SubscribedFields } from "../../../types/global";
 import action from "../handlers/action";
 import { PaginatedSearchParamsSchema, SubscribeSchema } from "../validations";
 import db from "@/db/db";
@@ -115,7 +115,9 @@ export async function toggleFieldSubscription(
   }
 }
 
-export async function getSubscribedFields(params: PaginatedSearchParams) {
+export async function getSubscribedFields(
+  params: PaginatedSearchParams
+): Promise<ActionResponse<{ fields: SubscribedFields[]; isNext: boolean }>> {
   const validationResult = await action({
     formdata: params,
     schema: PaginatedSearchParamsSchema,
@@ -152,8 +154,7 @@ export async function getSubscribedFields(params: PaginatedSearchParams) {
 
     return {
       success: true,
-      data: { fields: subscribedFields.map((sub) => sub.field) },
-      isNext,
+      data: { fields: subscribedFields.map((sub) => sub.field), isNext },
     };
   } catch (error) {
     console.error(error);

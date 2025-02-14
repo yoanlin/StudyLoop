@@ -52,3 +52,10 @@ interface UserWithPostCount {
     posts: number;
   };
 }
+
+interface SubscribedFields {
+  name: string;
+  id: string;
+  postCount: number;
+  createdAt: Date;
+}
