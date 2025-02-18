@@ -10,8 +10,7 @@ const ProfilePage = async ({ params, searchParams }: RouteParams) => {
   return (
     <div className="flex flex-col gap-10 p-10 xl:flex-row xl:items-center">
       <ProfileCard userId={id} />
-
-      <section className="xl:w-[48rem] xl:self-start">
+      <section className="flex w-full justify-center xl:w-[42rem] xl:self-start">
         <ProfileTab
           userId={id}
           page={Number(page)}
