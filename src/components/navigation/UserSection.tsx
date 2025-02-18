@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 const UserSection = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
   const pathname = usePathname();
   const { data } = useSession();
+  if (!data) return;
   return (
     <div
       className={cn(
@@ -23,13 +24,18 @@ const UserSection = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
         Personal
       </h3>
       {userbarLinks.map((item) => {
+        const route =
+          typeof item.route === "function"
+            ? item.route(data.user!.id!)
+            : item.route;
         const isSelected =
-          (pathname.includes(item.route) && item.route.length > 1) ||
+          (pathname.includes(route) && route.length > 1) ||
           pathname === item.route;
+
         const LinkComponent = (
           <Link
-            key={item.route}
-            href={item.route}
+            key={item.name}
+            href={route}
             className={cn(
               "flex shrink justify-start p-4 sm:p-6 gap-3 w-full hover:bg-secondary lg:w-48 xl:w-56 lg:p-4",
               isSelected && "bg-secondary font-bold"
@@ -48,11 +54,11 @@ const UserSection = ({ isMobileNav = false }: { isMobileNav?: boolean }) => {
           </Link>
         );
         return isMobileNav ? (
-          <SheetClose asChild key={item.route}>
+          <SheetClose asChild key={item.name}>
             {LinkComponent}
           </SheetClose>
         ) : (
-          <React.Fragment key={item.route}>{LinkComponent}</React.Fragment>
+          <React.Fragment key={item.name}>{LinkComponent}</React.Fragment>
         );
       })}
     </div>

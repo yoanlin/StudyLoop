@@ -62,3 +62,7 @@ interface SubscribeParams {
 interface CollectionParams {
   postId: string;
 }
+
+interface UserId {
+  userId: string;
+}

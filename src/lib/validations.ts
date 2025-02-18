@@ -135,3 +135,11 @@ export const SubscribeSchema = z.object({
 export const CollectionSchema = z.object({
   postId: z.string().min(1, { message: "post ID is required." }),
 });
+
+export const GetUserProfileSchema = PaginatedSearchParamsSchema.extend({
+  userId: z.string().nullable(),
+});
+
+export const UserIdSchema = z.object({
+  userId: z.string().min(1, { message: "User ID is required." }),
+});

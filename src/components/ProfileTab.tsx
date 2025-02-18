@@ -1,7 +1,11 @@
+"use client";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PostCard from "./cards/PostCard";
-import { PostCardInfo, SubscribedFields } from "../../types/global";
+import { PostCardInfo, SubscribedField } from "../../types/global";
 import FieldCard from "./cards/FieldCard";
+import { getUserPosts } from "@/lib/actions/post.action";
+import { useEffect, useState } from "react";
+import { getSubscribedFields } from "@/lib/actions/field.action";
 
 const posts: PostCardInfo[] = [
   {
@@ -75,7 +79,7 @@ const posts: PostCardInfo[] = [
   },
 ];
 
-const fileds: SubscribedFields[] = [
+const fields: SubscribedField[] = [
   {
     id: "01",
     name: "Sport",
@@ -96,9 +100,47 @@ const fileds: SubscribedFields[] = [
   },
 ];
 
-export default function ProfileTab({}) {
+interface Props {
+  userId: string;
+  page: number;
+  pageSize: number;
+}
+export default function ProfileTab({ userId, page, pageSize }: Props) {
+  const [posts, setPost] = useState<PostCardInfo[]>([]);
+  const [fields, setFields] = useState<SubscribedField[]>([]);
+  const [activeTab, setActiveTab] = useState<"posts" | "subscriptions">(
+    "posts"
+  );
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (activeTab === "posts") {
+        const response = await getUserPosts({
+          userId,
+          page: page || 1,
+          pageSize: pageSize || 10,
+        });
+        if (response.success && response.data) setPost(response.data.posts);
+      } else if (activeTab === "subscriptions") {
+        const response = await getSubscribedFields({
+          userId,
+          page: page || 1,
+          pageSize: pageSize || 10,
+        });
+        if (response.success && response.data) setFields(response.data.fields);
+      }
+    };
+    fetchData();
+  }, [activeTab, page, pageSize, userId]);
+
   return (
-    <Tabs defaultValue="posts" className="max-w-3xl">
+    <Tabs
+      defaultValue="posts"
+      className="max-w-2xl"
+      onValueChange={(value) =>
+        setActiveTab((value as "posts") || "subscriptions")
+      }
+    >
       <TabsList className="w-full bg-stone-200 dark:bg-stone-700">
         <TabsTrigger value="posts" className="w-1/2 text-foreground">
           Posts
@@ -108,15 +150,19 @@ export default function ProfileTab({}) {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="posts">
-        <div className="mt-10 flex flex-col gap-3">
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
-        </div>
+        {posts.length > 0 ? (
+          <div className="mt-10 flex flex-col gap-3">
+            {posts.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        ) : (
+          <p>There is no post yet</p>
+        )}
       </TabsContent>
       <TabsContent value="subscriptions">
-        <div className="mt-10 flex flex-wrap gap-3 text-xl sm:flex-row sm:justify-between">
-          {fileds.map((field) => (
+        <div className="mt-10 flex flex-wrap gap-8 text-xl sm:flex-row">
+          {fields.map((field) => (
             <FieldCard key={field.id} fieldInfo={field} />
           ))}
         </div>

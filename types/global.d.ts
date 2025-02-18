@@ -53,9 +53,20 @@ interface UserWithPostCount {
   };
 }
 
-interface SubscribedFields {
+interface SubscribedField {
   name: string;
   id: string;
   postCount: number;
   createdAt: Date;
+}
+
+interface GetProfileParams extends PaginatedSearchParams {
+  userId: string?;
+}
+
+interface ProfileCard extends User {
+  _count: {
+    posts: number;
+    subscriptions: number;
+  };
 }

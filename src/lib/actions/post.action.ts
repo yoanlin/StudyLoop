@@ -7,6 +7,7 @@ import {
   CreatePostSchema,
   EditPostSchema,
   GetPostSchema,
+  GetUserProfileSchema,
   PaginatedSearchParamsSchema,
 } from "../validations";
 import db from "@/db/db";
@@ -15,6 +16,7 @@ import {
   PaginatedSearchParams,
   PostCardInfo,
   GetPostOutput,
+  GetProfileParams,
 } from "../../../types/global";
 import { Prisma } from "@prisma/client";
 
@@ -458,6 +460,68 @@ export async function getCollectedPosts(
       success: false,
       error: {
         message: error instanceof Error ? error.message : "unknown error",
+      },
+    };
+  }
+}
+
+export async function getUserPosts(
+  params: GetProfileParams
+): Promise<ActionResponse<{ posts: PostCardInfo[]; isNext: boolean }>> {
+  const validationResult = await action({
+    formdata: params,
+    schema: GetUserProfileSchema,
+  });
+
+  if (validationResult instanceof Error)
+    return { success: false, error: { message: validationResult.message } };
+
+  const { userId, page = 1, pageSize = 10 } = validationResult.formdata!;
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    const take = pageSize;
+    const skip = (page - 1) * pageSize;
+
+    const posts = await db.post.findMany({
+      where: { authorId: userId },
+      include: {
+        author: {
+          select: {
+            id: true,
+            name: true,
+            image: true,
+          },
+        },
+        field: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+        _count: {
+          select: { comments: true },
+        },
+        comments: {
+          select: {
+            rating: true,
+          },
+        },
+      },
+      take,
+      skip,
+    });
+
+    const totalPosts = await db.post.count({ where: { authorId: userId } });
+    const isNext = totalPosts > skip + posts.length;
+
+    return { success: true, data: { posts, isNext } };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown error",
       },
     };
   }

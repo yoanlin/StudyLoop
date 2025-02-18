@@ -1,9 +1,17 @@
 "use server";
 
 import { Field, Prisma } from "@prisma/client";
-import { PaginatedSearchParams, SubscribedFields } from "../../../types/global";
+import {
+  GetProfileParams,
+  PaginatedSearchParams,
+  SubscribedField,
+} from "../../../types/global";
 import action from "../handlers/action";
-import { PaginatedSearchParamsSchema, SubscribeSchema } from "../validations";
+import {
+  GetUserProfileSchema,
+  PaginatedSearchParamsSchema,
+  SubscribeSchema,
+} from "../validations";
 import db from "@/db/db";
 import { NotFoundError } from "../errors";
 
@@ -116,11 +124,11 @@ export async function toggleFieldSubscription(
 }
 
 export async function getSubscribedFields(
-  params: PaginatedSearchParams
-): Promise<ActionResponse<{ fields: SubscribedFields[]; isNext: boolean }>> {
+  params: GetProfileParams
+): Promise<ActionResponse<{ fields: SubscribedField[]; isNext: boolean }>> {
   const validationResult = await action({
     formdata: params,
-    schema: PaginatedSearchParamsSchema,
+    schema: GetUserProfileSchema,
     authorize: true,
   });
   if (validationResult instanceof Error)
@@ -128,12 +136,12 @@ export async function getSubscribedFields(
 
   const { query, page = 1, pageSize = 12 } = validationResult.formdata!;
 
-  const userId = validationResult.session?.user?.id;
-  if (!userId) throw new NotFoundError("User");
+  const finalUserId = params.userId || validationResult.session?.user?.id;
+  if (!finalUserId) throw new NotFoundError("User");
 
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const whereConditions: any = { userId };
+    const whereConditions: any = { userId: finalUserId };
 
     if (query) {
       whereConditions.field = {

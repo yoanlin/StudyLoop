@@ -29,7 +29,7 @@ export const userbarLinks = [
   },
   {
     imgURL: "/profile-icon.svg",
-    route: "/profile",
+    route: (userId: string) => `/profile/${userId}`,
     name: "Profile",
   },
 ];
