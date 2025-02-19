@@ -1,3 +1,4 @@
+import ProfileImageUpload from "@/components/ProfileImageUpload";
 import ProfileTab from "@/components/ProfileTab";
 import { getUser } from "@/lib/actions/user.action";
 import Image from "next/image";
@@ -26,13 +27,17 @@ const ProfileCard = async ({ userId }: { userId: string }) => {
   if (success && data)
     return (
       <section className="flex w-full cursor-default items-center justify-around gap-5 xl:w-96 xl:flex-col xl:items-center xl:self-start xl:rounded-xl xl:border xl:bg-background xl:py-5 xl:shadow">
-        <Image
-          src={data.image ? data.image : "/fb-Avatar.png"}
-          alt="avatar"
-          width={125}
-          height={125}
-          className="rounded-full xl:size-[200px]"
-        />
+        <div className="relative size-auto">
+          <Image
+            src={data.image ? data.image : "/fb-Avatar.png"}
+            alt="avatar"
+            width={125}
+            height={125}
+            className="size-[125px] rounded-full object-cover xl:size-[200px]"
+          />
+          <ProfileImageUpload userId={userId} />
+        </div>
+
         <p className="flex flex-col">
           <span className="text-xl font-black">{data.name}</span>{" "}
           <span className="text-muted xl:text-center">@{data.username}</span>

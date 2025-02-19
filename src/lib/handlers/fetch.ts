@@ -21,10 +21,13 @@ export async function fetchHandler<T>(
   const controller = new AbortController();
   const id = setTimeout(() => controller.abort(), timeout);
 
-  const defaultHeaders: HeadersInit = {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-  };
+  const defaultHeaders: HeadersInit =
+    restOptions.body instanceof FormData
+      ? {}
+      : {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        };
 
   const headers: HeadersInit = { ...defaultHeaders, ...customHeaders };
 

@@ -14,6 +14,11 @@ const nextConfig: NextConfig = {
         hostname: "img.freepik.com",
         port: "",
       },
+      {
+        protocol: "https",
+        hostname: "2llnzsm4hlwbfldr.public.blob.vercel-storage.com",
+        port: "",
+      },
     ],
   },
 };

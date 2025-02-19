@@ -32,6 +32,11 @@ export const api = {
         body: JSON.stringify(userData),
       }),
     getById: (id: string) => fetchHandler(`${API_BASE_URL}/users/${id}`),
+    uploadProfileImage: (formdata: FormData) =>
+      fetchHandler(`${API_BASE_URL}/users/upload-profile-image`, {
+        method: "POST",
+        body: formdata,
+      }),
   },
   subscriptions: {
     checkSubscription: (userId: string, fieldId: string) =>
