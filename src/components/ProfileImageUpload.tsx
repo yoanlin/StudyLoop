@@ -3,10 +3,14 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { api } from "@/lib/api";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
 const ProfileImageUpload = ({ userId }: { userId: string }) => {
   const [isUploading, setIsUploading] = useState<boolean>(false);
   const router = useRouter();
+  const { data: session } = useSession();
+  const isUser = session?.user?.id === userId;
 
   const handleClick = async () => {
     if (isUploading) return;
@@ -52,14 +56,17 @@ const ProfileImageUpload = ({ userId }: { userId: string }) => {
   return (
     <div
       onClick={handleClick}
-      className="absolute bottom-1 right-1 box-border cursor-pointer rounded-full border border-gray-200 bg-white p-2 shadow-none"
+      className={cn(
+        "absolute bottom-1 right-1 box-border cursor-pointer rounded-full border border-gray-200 bg-white p-2 shadow-none",
+        !isUser && "hidden"
+      )}
     >
       <Image
-        src="/image.png"
+        src={isUploading ? "/loading.png" : "/image.png"}
         alt="add image"
         width={20}
         height={20}
-        className="xl:size-7"
+        className={cn("xl:size-7", isUploading && "animate-spin")}
       />
     </div>
   );
