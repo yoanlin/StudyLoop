@@ -4,6 +4,7 @@ import Hero from "@/components/Hero";
 import Searchbar from "@/components/navigation/Searchbar";
 import { getPosts } from "@/lib/actions/post.action";
 import { SearchParams } from "../../../types/global";
+import Pagination from "@/components/Pagination";
 
 export default async function Home({ searchParams }: SearchParams) {
   const { query, page, pageSize, filter } = await searchParams;
@@ -11,17 +12,17 @@ export default async function Home({ searchParams }: SearchParams) {
   const { success, data, error } = await getPosts({
     query: query || "",
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
+    pageSize: Number(pageSize) || 1,
     filter: filter || "",
   });
 
-  const { posts } = data || {};
+  const { posts, isNext } = data || {};
 
   return (
     <div className="scrollbar-hide flex h-screen w-full flex-col items-center overflow-x-hidden">
-      <main className="flex size-full flex-col pb-8">
+      <main className="flex size-full flex-col pb-16">
         <Hero />
-        <section className="mt-10 flex flex-col items-center gap-5 px-10 md:px-20 lg:max-w-3xl xl:max-w-5xl">
+        <section className="mt-10 flex flex-col items-center gap-5 px-10 pb-20 md:px-20 lg:max-w-3xl xl:max-w-5xl">
           <div className="flex w-full max-w-2xl flex-col items-center justify-between gap-5 sm:flex-row">
             <Searchbar
               route="/"
@@ -56,6 +57,11 @@ export default async function Home({ searchParams }: SearchParams) {
               <p>{error?.message || "Failed to fetch posts"}</p>
             </div>
           )}
+
+          <Pagination
+            pageNumber={page ? +page : 1}
+            isNext={isNext ? isNext : false}
+          />
         </section>
       </main>
     </div>
