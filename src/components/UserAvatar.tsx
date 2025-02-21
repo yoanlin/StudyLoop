@@ -12,35 +12,38 @@ import {
 } from "@radix-ui/react-dropdown-menu";
 import Image from "next/image";
 import { signOut } from "next-auth/react";
+import Link from "next/link";
+import ROUTES from "../../constants/routes";
 
 interface Props {
-  id: string;
+  userId: string;
   name: string;
   imageUrl?: string | null;
-  className?: string;
 }
 
-const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9" }: Props) => {
+const UserAvatar = ({ userId, name, imageUrl }: Props) => {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger>
-        {imageUrl ? (
-          <Image
-            src={imageUrl}
-            alt={name}
-            width={32}
-            height={32}
-            className="size-8 rounded-full object-cover"
-          />
-        ) : (
-          <p>name</p>
-        )}
+      <DropdownMenuTrigger className="focus:outline-none">
+        <Image
+          src={imageUrl ? imageUrl : "/fb-Avatar.png"}
+          alt={name}
+          width={32}
+          height={32}
+          className="size-8 rounded-full object-cover"
+        />
       </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        <DropdownMenuLabel>{name}</DropdownMenuLabel>
+      <DropdownMenuContent className="pt-2 font-markaziText text-xl">
+        <DropdownMenuLabel className="cursor-default pl-1 font-bold">
+          {name}
+        </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem>Profile</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => signOut()}>Sign out</DropdownMenuItem>
+        <DropdownMenuItem className="text-xl">
+          <Link href={ROUTES.PROFILE(userId)}>Profile</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem className="py-2 text-xl" onClick={() => signOut()}>
+          Sign out
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

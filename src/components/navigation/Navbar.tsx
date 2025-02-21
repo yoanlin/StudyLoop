@@ -76,7 +76,7 @@ const Navbar = ({ isMain }: { isMain?: boolean }) => {
 
             {status === "authenticated" && session.user ? (
               <UserAvatar
-                id={session.user.id!}
+                userId={session.user.id!}
                 name={session.user.name!}
                 imageUrl={session.user.image}
               />
