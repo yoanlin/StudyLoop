@@ -26,7 +26,7 @@ export async function getFields(
   if (validationResult instanceof Error)
     return { success: false, error: { message: validationResult.message } };
 
-  const { query, filter, page = 1, pageSize = 30 } = params;
+  const { query, filter, page = 1, pageSize = 9 } = params;
 
   try {
     const skip = (Number(page) - 1) * pageSize;

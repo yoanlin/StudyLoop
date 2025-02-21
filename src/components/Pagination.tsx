@@ -25,8 +25,10 @@ const Pagination = ({ pageNumber, isNext }: Props) => {
     router.push(newUrl, { scroll: false });
   };
 
+  if (!isNext && pageNumber === 1) return null;
+
   return (
-    <div className="flex items-center gap-3 text-foreground">
+    <div className="mx-auto mt-8 flex items-center gap-3 text-foreground">
       <Button
         disabled={pageNumber === 1}
         className="border bg-background text-foreground"

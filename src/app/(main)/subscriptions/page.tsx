@@ -3,15 +3,21 @@ import { getSubscribedFields } from "@/lib/actions/field.action";
 import React from "react";
 import { SearchParams } from "../../../../types/global";
 import FieldCard from "@/components/cards/FieldCard";
+import Pagination from "@/components/Pagination";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
 const SubscriptionPage = async ({ searchParams }: SearchParams) => {
   const { query, page, pageSize } = await searchParams;
   const { success, data, error } = await getSubscribedFields({
     query: query || "",
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 12,
+    pageSize: Number(pageSize) || 2,
+    userId: null,
   });
-  const { fields } = data || {};
+  const { fields, isNext } = data || {};
+  const session = await auth();
+  if (!session) redirect("/login");
   return (
     <div className="mt-10 w-full max-w-3xl px-10 text-2xl sm:ml-20 ">
       <Searchbar
@@ -20,9 +26,9 @@ const SubscriptionPage = async ({ searchParams }: SearchParams) => {
         otherClass="h-12"
       />
 
-      <main className="mt-10 h-screen font-bowlbyOneSC">
+      <main className="mt-10 flex h-screen flex-col font-bowlbyOneSC">
         <h2 className="text-2xl">SUBSCRIPTIONS</h2>
-        <section className="mt-5 flex flex-wrap gap-5 xl:flex-nowrap">
+        <section className="mb-10 mt-5 flex flex-wrap gap-5 xl:flex-nowrap">
           {success ? (
             fields && fields.length > 0 ? (
               fields.map((field) => (
@@ -32,9 +38,13 @@ const SubscriptionPage = async ({ searchParams }: SearchParams) => {
               <p>No fields found</p>
             )
           ) : (
-            <p>Failed to fetch fields</p>
+            <p>{error?.message ? error.message : "Failed to fetch fields"}</p>
           )}
         </section>
+        <Pagination
+          pageNumber={page ? +page : 1}
+          isNext={isNext ? isNext : false}
+        />
       </main>
     </div>
   );

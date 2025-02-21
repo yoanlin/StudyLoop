@@ -32,9 +32,9 @@ const CollectionPage = async ({ searchParams }: SearchParams) => {
       </div>
 
       <main className="mt-10 h-screen">
-        <h2 className="font-bowlbyOneSC text-2xl">YOUR COLLECTIONS</h2>
         {success ? (
           <div className="mt-5 max-w-2xl space-y-2 sm:space-y-4">
+            <h2 className="font-bowlbyOneSC text-2xl">YOUR COLLECTIONS</h2>
             {posts && posts.length > 0 ? (
               posts.map((post) => <PostCard key={post.id} post={post} />)
             ) : (
@@ -42,7 +42,9 @@ const CollectionPage = async ({ searchParams }: SearchParams) => {
             )}
           </div>
         ) : (
-          <p>{error?.message || "Failed to fetch collections"}</p>
+          <h2 className="text-center font-bowlbyOneSC text-2xl">
+            {error?.message || "Failed to fetch collections"}
+          </h2>
         )}
       </main>
     </div>

@@ -13,7 +13,7 @@ import { NotFoundError } from "../errors";
 
 export async function getUsers(
   params: PaginatedSearchParams
-): Promise<ActionResponse<UserWithPostCount[]>> {
+): Promise<ActionResponse<{ users: UserWithPostCount[] }>> {
   const { query } = params;
 
   const whereConditions: Prisma.UserWhereInput = query
@@ -45,7 +45,7 @@ export async function getUsers(
       },
     });
 
-    return { success: true, data: users };
+    return { success: true, data: { users } };
   } catch (error) {
     console.log("Error fetching top users:", error);
     return {
