@@ -11,12 +11,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Pagination from "./Pagination";
-import {
-  redirect,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
+import { redirect, useRouter, useSearchParams } from "next/navigation";
 import ROUTES from "../../constants/routes";
 import { removeKeysFromUrlQuery } from "@/lib/url";
 
@@ -37,7 +32,6 @@ export default function ProfileTab({ userId, page, pageSize }: Props) {
 
   const router = useRouter();
   const searchParams = useSearchParams();
-  const pathname = usePathname();
 
   const handleTabChange = (newTab: string) => {
     setActiveTab(newTab as "posts" | "subscriptions");
