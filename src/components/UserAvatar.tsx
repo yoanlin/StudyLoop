@@ -30,7 +30,7 @@ const UserAvatar = ({ id, name, imageUrl, className = "h-9 w-9" }: Props) => {
             alt={name}
             width={32}
             height={32}
-            className="rounded-full"
+            className="size-8 rounded-full object-cover"
           />
         ) : (
           <p>name</p>

@@ -42,7 +42,7 @@ const PostDetails = async ({ params }: RouteParams) => {
               alt="avatar"
               width={20}
               height={20}
-              className="inline-block rounded-full"
+              className="inline-block size-5 rounded-full object-cover"
             />
             <p className="ml-3 inline-block">
               {data.author.name} - {getTimeStamp(data.createdAt)}

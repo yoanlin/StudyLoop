@@ -13,7 +13,7 @@ const UserCard = ({ user }: { user: UserWithPostCount }) => {
           alt="avatar"
           width={48}
           height={48}
-          className="size-16 rounded-full"
+          className="size-12 rounded-full object-cover"
         />
         <div className="-space-y-2 text-center">
           <p className="text-xl">{user.name}</p>

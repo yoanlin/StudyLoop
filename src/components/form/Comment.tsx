@@ -52,7 +52,7 @@ const Comment = ({ postId }: { postId: string }) => {
             alt="avatar"
             width={40}
             height={40}
-            className="inline-block rounded-full"
+            className="inline-block size-10 rounded-full object-cover"
           />
           <span className="ml-3 text-2xl">{data.user.name}</span>
         </>

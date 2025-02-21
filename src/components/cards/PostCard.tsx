@@ -51,7 +51,7 @@ const PostDetails = ({ author, createdAt }: DetailsProps) => {
           alt="avatar"
           width={18}
           height={18}
-          className="inline-block rounded-full"
+          className="inline-block size-[18px] rounded-full object-cover"
         />
         <span>{author.name}</span>
       </div>
