@@ -1,4 +1,4 @@
-import ProfileImageUpload from "@/components/ProfileImageUpload";
+import ProfileImageUpload from "@/components/buttons/ProfileImageUpload";
 import ProfileTab from "@/components/ProfileTab";
 import { getUser } from "@/lib/actions/user.action";
 import Image from "next/image";

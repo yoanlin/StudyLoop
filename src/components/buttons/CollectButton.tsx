@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { Bookmark } from "lucide-react";
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 import { toggleSavePost } from "@/lib/actions/post.action";
 
 const CollectButton = ({ postId }: { postId: string }) => {

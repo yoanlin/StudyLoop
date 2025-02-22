@@ -6,8 +6,9 @@ import Link from "next/link";
 import React from "react";
 import ROUTES from "../../../../../constants/routes";
 import AllComments from "@/components/AllComments";
-import SubscribeButton from "@/components/SubscribeButton";
-import CollectButton from "@/components/CollectButton";
+import SubscribeButton from "@/components/buttons/SubscribeButton";
+import CollectButton from "@/components/buttons/CollectButton";
+import EditButton from "@/components/buttons/EditDeleteButton";
 
 const PostDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -27,13 +28,14 @@ const PostDetails = async ({ params }: RouteParams) => {
             {data.field.name}{" "}
           </Link>
           <SubscribeButton fieldId={data.fieldId} otherClass="inline-block" />
-          <h2 className="font-bowlbyOneSC text-2xl">
+          <h2 className="flex gap-3 font-bowlbyOneSC text-2xl">
             {data.title.toUpperCase()}{" "}
             <span className="font-markaziText">
               {data.comments.length > 0
                 ? `(${averageRating})`
                 : "(No comments yet)"}
             </span>
+            <EditButton postId={id} isAuthor={false} />
           </h2>
 
           <Link href={`/user/${data.author.id}`}>
@@ -49,6 +51,7 @@ const PostDetails = async ({ params }: RouteParams) => {
             </p>
           </Link>
           <p className="relative px-10 py-5">{data.content}</p>
+
           <CollectButton postId={id} />
         </div>
 

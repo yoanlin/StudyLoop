@@ -1,7 +1,9 @@
+import SubscribeButton from "@/components/buttons/SubscribeButton";
 import PostCard from "@/components/cards/PostCard";
 import FilterSelector from "@/components/FilterSelector";
 import Searchbar from "@/components/navigation/Searchbar";
-import SubscribeButton from "@/components/SubscribeButton";
+import Pagination from "@/components/Pagination";
+
 import { getPosts } from "@/lib/actions/post.action";
 import React from "react";
 
@@ -12,11 +14,11 @@ const FieldPage = async ({ params, searchParams }: RouteParams) => {
     query: query || "",
     filter: filter || "",
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 10,
+    pageSize: Number(pageSize) || 1,
     sort: id || "",
   });
 
-  const { posts } = data || {};
+  const { posts, isNext } = data || {};
 
   return (
     <section className="mt-10 w-full max-w-2xl px-10 sm:ml-20 lg:max-w-4xl">
@@ -42,14 +44,21 @@ const FieldPage = async ({ params, searchParams }: RouteParams) => {
             </h2>
             <SubscribeButton fieldId={posts[0].fieldId} />
           </div>
-
-          {posts.length > 0 ? (
-            posts.map((post) => <PostCard key={post.id} post={post} />)
-          ) : (
-            <div>
+          <div>
+            {posts.length > 0 ? (
+              <div className="mb-10 flex flex-col">
+                {posts.map((post) => (
+                  <PostCard key={post.id} post={post} />
+                ))}
+                <Pagination
+                  pageNumber={page ? +page : 1}
+                  isNext={isNext ?? false}
+                />
+              </div>
+            ) : (
               <p>No posts found</p>
-            </div>
-          )}
+            )}
+          </div>
         </section>
       ) : (
         <div>

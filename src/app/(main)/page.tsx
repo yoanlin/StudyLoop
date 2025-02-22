@@ -12,7 +12,7 @@ export default async function Home({ searchParams }: SearchParams) {
   const { success, data, error } = await getPosts({
     query: query || "",
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 1,
+    pageSize: Number(pageSize) || 10,
     filter: filter || "",
   });
 
@@ -43,7 +43,7 @@ export default async function Home({ searchParams }: SearchParams) {
           </p>
 
           {success ? (
-            <div className="max-w-2xl space-y-2 sm:space-y-4">
+            <div className="w-full max-w-2xl space-y-2 sm:space-y-4">
               {posts && posts.length > 0 ? (
                 posts.map((post) => <PostCard key={post.id} post={post} />)
               ) : (
