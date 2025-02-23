@@ -65,7 +65,7 @@ const PostForm = ({ post, isEdit = false }: Params) => {
           name="title"
           render={({ field }) => (
             <FormItem className="space-y-5">
-              <FormLabel>Title</FormLabel>
+              <FormLabel className="font-bold">Title: </FormLabel>
               <FormControl>
                 <Input className="max-w-[800px]" {...field} />
               </FormControl>
@@ -79,7 +79,9 @@ const PostForm = ({ post, isEdit = false }: Params) => {
           name="field"
           render={({ field }) => (
             <FormItem className="space-y-5">
-              <FormLabel>What field is this learning resource?</FormLabel>
+              <FormLabel className="font-bold">
+                What field is this learning resource?
+              </FormLabel>
               <FormControl>
                 <Input className="max-w-[800px]" {...field} />
               </FormControl>
@@ -93,7 +95,7 @@ const PostForm = ({ post, isEdit = false }: Params) => {
           name="content"
           render={({ field }) => (
             <FormItem className="space-y-5">
-              <FormLabel>
+              <FormLabel className="font-bold">
                 Please share your thoughts and resources here.
               </FormLabel>
               <FormControl>

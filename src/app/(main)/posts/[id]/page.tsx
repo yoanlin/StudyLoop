@@ -8,7 +8,7 @@ import ROUTES from "../../../../../constants/routes";
 import AllComments from "@/components/AllComments";
 import SubscribeButton from "@/components/buttons/SubscribeButton";
 import CollectButton from "@/components/buttons/CollectButton";
-import EditButton from "@/components/buttons/EditDeleteButton";
+import EditDeleteButton from "@/components/buttons/EditDeleteButton";
 
 const PostDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -35,7 +35,7 @@ const PostDetails = async ({ params }: RouteParams) => {
                 ? `(${averageRating})`
                 : "(No comments yet)"}
             </span>
-            <EditButton postId={id} isAuthor={false} />
+            <EditDeleteButton postId={id} authorId={data.authorId} />
           </h2>
 
           <Link href={`/user/${data.author.id}`}>

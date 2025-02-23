@@ -70,3 +70,8 @@ interface ProfileCard extends User {
     subscriptions: number;
   };
 }
+
+interface DeletePostParams {
+  postId: string;
+  authorId: string;
+}

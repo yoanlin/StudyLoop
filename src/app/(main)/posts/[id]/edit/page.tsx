@@ -16,7 +16,7 @@ const EditPost = async ({ params }: RouteParams) => {
 
   if (post?.authorId !== session.user?.id) return redirect(ROUTES.POST(id));
   return (
-    <main className="pl-10 lg:pl-[max(20rem,calc(100vw-60rem)/2)]">
+    <main className="pl-10">
       <div className="lg:ml-24">
         <PostForm post={post} isEdit />
       </div>

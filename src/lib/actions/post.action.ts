@@ -5,18 +5,20 @@ import action from "../handlers/action";
 import {
   CollectionSchema,
   CreatePostSchema,
+  DeletePostSchema,
   EditPostSchema,
   GetPostSchema,
   GetUserProfileSchema,
   PaginatedSearchParamsSchema,
 } from "../validations";
 import db from "@/db/db";
-import { NotFoundError } from "../errors";
+import { NotFoundError, UnauthorizedError } from "../errors";
 import {
   PaginatedSearchParams,
   PostCardInfo,
   GetPostOutput,
   GetProfileParams,
+  DeletePostParams,
 } from "../../../types/global";
 import { Prisma } from "@prisma/client";
 
@@ -516,6 +518,52 @@ export async function getUserPosts(
     const isNext = totalPosts > skip + posts.length;
 
     return { success: true, data: { posts, isNext } };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown error",
+      },
+    };
+  }
+}
+
+export async function deletePost(
+  params: DeletePostParams
+): Promise<ActionResponse<string>> {
+  const validationResult = await action({
+    formdata: params,
+    schema: DeletePostSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error) {
+    return { success: false, error: { message: validationResult.message } };
+  }
+
+  const { postId, authorId } = validationResult.formdata!;
+  const userId = validationResult.session?.user?.id;
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    if (userId !== authorId) throw new UnauthorizedError();
+
+    const post = await db.post.findUnique({
+      where: {
+        id: postId,
+      },
+    });
+
+    if (!post) throw new Error("Post not found");
+
+    await db.$transaction(async (tx) => {
+      await tx.comment.deleteMany({ where: { postId } });
+      await tx.postCollector.deleteMany({ where: { postId } });
+      await tx.post.delete({ where: { id: postId } });
+    });
+
+    return { success: true, data: postId };
   } catch (error) {
     console.error(error);
     return {
