@@ -26,8 +26,8 @@ const SubscriptionPage = async ({ searchParams }: SearchParams) => {
         otherClass="h-12"
       />
 
-      <main className="mt-10 flex h-screen flex-col font-bowlbyOneSC">
-        <h2 className="text-2xl">SUBSCRIPTIONS</h2>
+      <main className="mt-10 flex h-screen flex-col">
+        <h2 className="font-bowlbyOneSC text-2xl">SUBSCRIPTIONS</h2>
         <section className="mb-10 mt-5 flex flex-wrap gap-5 xl:flex-nowrap">
           {success ? (
             fields && fields.length > 0 ? (
@@ -35,7 +35,9 @@ const SubscriptionPage = async ({ searchParams }: SearchParams) => {
                 <FieldCard key={field.id} fieldInfo={field} />
               ))
             ) : (
-              <p>No fields found</p>
+              <p className="w-full pt-10 text-center font-markaziText text-2xl">
+                You haven&apos;t subscribed to any field yet
+              </p>
             )
           ) : (
             <p>{error?.message ? error.message : "Failed to fetch fields"}</p>

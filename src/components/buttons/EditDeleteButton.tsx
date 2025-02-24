@@ -37,8 +37,8 @@ const EditDeleteButton = ({ postId, authorId }: Props) => {
   return (
     <div className={cn("ml-auto", !isAuthor && "hidden")}>
       <DropdownMenu>
-        <DropdownMenuTrigger className="focus:outline-none">
-          <EllipsisVertical color="#808080" size={22} />
+        <DropdownMenuTrigger className="size-5 focus:outline-none">
+          <EllipsisVertical color="#808080" size={20} />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="font-markaziText">
           <DropdownMenuItem>

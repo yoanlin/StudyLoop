@@ -92,8 +92,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         image: user.image!,
         username:
           account.provider === "github"
-            ? (profile?.login as string)
-            : (user.name?.toLowerCase() as string),
+            ? String(profile?.login || "").replace(/\s+/g, "_")
+            : String(user.name || "")
+                .toLowerCase()
+                .replace(/\s+/g, "_"),
       };
 
       const { success } = (await api.auth.oAuthLogin({

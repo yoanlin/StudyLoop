@@ -67,7 +67,7 @@ const PostForm = ({ post, isEdit = false }: Params) => {
             <FormItem className="space-y-5">
               <FormLabel className="font-bold">Title: </FormLabel>
               <FormControl>
-                <Input className="max-w-[800px]" {...field} />
+                <Input className="max-w-3xl" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,7 +83,7 @@ const PostForm = ({ post, isEdit = false }: Params) => {
                 What field is this learning resource?
               </FormLabel>
               <FormControl>
-                <Input className="max-w-[800px]" {...field} />
+                <Input className="max-w-3xl" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -99,18 +99,23 @@ const PostForm = ({ post, isEdit = false }: Params) => {
                 Please share your thoughts and resources here.
               </FormLabel>
               <FormControl>
-                <Editor
-                  editorRef={editorRef}
-                  value={field.value}
-                  fieldChange={field.onChange}
-                  otherClass="min-h-[400px] max-w-[800px]"
-                />
+                <div className="size-full max-w-3xl border">
+                  <Editor
+                    editorRef={editorRef}
+                    value={field.value}
+                    fieldChange={field.onChange}
+                    otherClass="min-h-[400px] max-w-[800px]"
+                  />
+                </div>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button className="button mt-10" disabled={isPending}>
+        <Button
+          className="button mt-10 font-markaziText text-xl"
+          disabled={isPending}
+        >
           {isPending ? "Submitting..." : <>{isEdit ? "Edit" : "Submit Post"}</>}
         </Button>
       </form>

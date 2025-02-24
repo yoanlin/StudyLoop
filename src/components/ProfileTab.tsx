@@ -102,13 +102,13 @@ export default function ProfileTab({ userId, page, pageSize }: Props) {
         </div>
       </TabsContent>
       <TabsContent value="subscriptions">
-        <div className="mt-10 flex flex-wrap gap-4 text-xl sm:flex-row xl:gap-8">
+        <div className="mt-10 flex w-full flex-wrap gap-4 text-xl sm:flex-row xl:gap-8">
           {fields.length > 0 ? (
             fields.map((field) => (
               <FieldCard key={field.id} fieldInfo={field} />
             ))
           ) : (
-            <p className="mx-auto mt-10 font-markaziText text-2xl">
+            <p className="w-full pt-10 text-center font-markaziText text-2xl">
               There is no subscribed field yet
             </p>
           )}

@@ -172,7 +172,6 @@ export async function getPost(
   const validationResult = await action({
     formdata,
     schema: GetPostSchema,
-    authorize: true,
   });
 
   if (validationResult instanceof Error) {

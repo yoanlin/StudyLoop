@@ -1,6 +1,6 @@
 "use client";
 import "@mdxeditor/editor/style.css";
-import { useEffect, type ForwardedRef } from "react";
+import { type ForwardedRef } from "react";
 import {
   headingsPlugin,
   listsPlugin,
@@ -44,16 +44,11 @@ const Editor = ({
   fieldChange,
   ...props
 }: Props) => {
-  useEffect(() => {
-    const popup = document.querySelector(".mdxeditor-popup-container");
-    if (popup) {
-      popup.remove();
-    }
-  }, []);
   return (
     <MDXEditor
       markdown={value}
-      className={`dark-editor prose rounded-md border ${otherClass}`}
+      ref={editorRef}
+      className={`dark-editor prose relative rounded-md border border-transparent ${otherClass}`}
       onChange={fieldChange}
       plugins={[
         // Example Plugin Usage
@@ -118,7 +113,6 @@ const Editor = ({
         }),
       ]}
       {...props}
-      ref={editorRef}
     />
   );
 };

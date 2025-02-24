@@ -38,7 +38,9 @@ const CollectionPage = async ({ searchParams }: SearchParams) => {
             {posts && posts.length > 0 ? (
               posts.map((post) => <PostCard key={post.id} post={post} />)
             ) : (
-              <p>No post found</p>
+              <p className="pt-10 text-center font-markaziText text-2xl">
+                Your collection is empty
+              </p>
             )}
           </div>
         ) : (

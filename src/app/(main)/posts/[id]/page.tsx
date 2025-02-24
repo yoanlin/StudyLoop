@@ -9,6 +9,7 @@ import AllComments from "@/components/AllComments";
 import SubscribeButton from "@/components/buttons/SubscribeButton";
 import CollectButton from "@/components/buttons/CollectButton";
 import EditDeleteButton from "@/components/buttons/EditDeleteButton";
+import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
 
 const PostDetails = async ({ params }: RouteParams) => {
   const { id } = await params;
@@ -28,17 +29,20 @@ const PostDetails = async ({ params }: RouteParams) => {
             {data.field.name}{" "}
           </Link>
           <SubscribeButton fieldId={data.fieldId} otherClass="inline-block" />
+
           <h2 className="flex gap-3 font-bowlbyOneSC text-2xl">
-            {data.title.toUpperCase()}{" "}
-            <span className="font-markaziText">
-              {data.comments.length > 0
-                ? `(${averageRating})`
-                : "(No comments yet)"}
-            </span>
+            <p>
+              {data.title.toUpperCase()}{" "}
+              <span className="font-markaziText">
+                {data.comments.length > 0
+                  ? `(${averageRating})`
+                  : "(No comments yet)"}
+              </span>
+            </p>
             <EditDeleteButton postId={id} authorId={data.authorId} />
           </h2>
 
-          <Link href={`/user/${data.author.id}`}>
+          <Link href={`/profile/${data.author.id}`}>
             <Image
               src={data.author.image ? data.author.image : "/fb-Avatar.png"}
               alt="avatar"
@@ -50,7 +54,10 @@ const PostDetails = async ({ params }: RouteParams) => {
               {data.author.name} - {getTimeStamp(data.createdAt)}
             </p>
           </Link>
-          <p className="relative px-10 py-5">{data.content}</p>
+
+          <div>
+            <MarkdownRenderer content={data.content} />
+          </div>
 
           <CollectButton postId={id} />
         </div>
