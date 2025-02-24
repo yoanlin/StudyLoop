@@ -4,7 +4,7 @@ import PostCard from "./cards/PostCard";
 import { PostCardInfo, SubscribedField } from "../../types/global";
 import FieldCard from "./cards/FieldCard";
 import { getUserPosts } from "@/lib/actions/post.action";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { getSubscribedFields } from "@/lib/actions/field.action";
 import { useSession } from "next-auth/react";
 import { Button } from "./ui/button";
@@ -14,6 +14,7 @@ import Pagination from "./Pagination";
 import { redirect, useRouter, useSearchParams } from "next/navigation";
 import ROUTES from "../../constants/routes";
 import { removeKeysFromUrlQuery } from "@/lib/url";
+import { LoaderCircle } from "lucide-react";
 
 interface Props {
   userId: string;
@@ -21,6 +22,7 @@ interface Props {
   pageSize: number;
 }
 export default function ProfileTab({ userId, page, pageSize }: Props) {
+  const [isPending, startTransition] = useTransition();
   const [posts, setPost] = useState<PostCardInfo[]>([]);
   const [fields, setFields] = useState<SubscribedField[]>([]);
   const [isNext, setIsNext] = useState<boolean>(false);
@@ -69,7 +71,7 @@ export default function ProfileTab({ userId, page, pageSize }: Props) {
         }
       }
     };
-    fetchData();
+    startTransition(fetchData);
   }, [activeTab, page, pageSize, userId]);
 
   if (!session) redirect(ROUTES.LOG_IN);
@@ -88,34 +90,45 @@ export default function ProfileTab({ userId, page, pageSize }: Props) {
           Subscriptions
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="posts">
-        <div className="mt-10 flex flex-col items-center gap-3">
-          {posts.length > 0 ? (
-            posts.map((post) => <PostCard key={post.id} post={post} />)
-          ) : (
-            <div className="mt-10 flex flex-col items-center gap-4 text-xl">
-              <p className="font-markaziText text-2xl">There is no post yet</p>
-              <NewpostButton isUser={isUser} />
-            </div>
-          )}
-          <Pagination pageNumber={page ? +page : 1} isNext={isNext} />
-        </div>
-      </TabsContent>
-      <TabsContent value="subscriptions">
-        <div className="mt-10 flex w-full flex-wrap gap-4 text-xl sm:flex-row xl:gap-8">
-          {fields.length > 0 ? (
-            fields.map((field) => (
-              <FieldCard key={field.id} fieldInfo={field} />
-            ))
-          ) : (
-            <p className="w-full pt-10 text-center font-markaziText text-2xl">
-              There is no subscribed field yet
-            </p>
-          )}
-          <div className="mx-auto mt-20">
+      <TabsContent value="posts" className="relative">
+        {isPending ? (
+          <LoaderCircle className="absolute left-1/2 mt-40 size-9 animate-spin" />
+        ) : (
+          <div className="mt-10 flex flex-col items-center gap-3">
+            {posts.length > 0 ? (
+              posts.map((post) => <PostCard key={post.id} post={post} />)
+            ) : (
+              <div className="mt-10 flex flex-col items-center gap-4 text-xl">
+                <p className="font-markaziText text-2xl">
+                  There is no post yet
+                </p>
+                <NewpostButton isUser={isUser} />
+              </div>
+            )}
             <Pagination pageNumber={page ? +page : 1} isNext={isNext} />
           </div>
-        </div>
+        )}
+      </TabsContent>
+      <TabsContent value="subscriptions" className="relative">
+        {isPending ? (
+          <LoaderCircle className="absolute left-1/2 mt-40 size-9 animate-spin" />
+        ) : (
+          <div className="mt-10 flex w-full flex-wrap gap-4 text-xl sm:flex-row xl:gap-8">
+            {fields.length > 0 ? (
+              fields.map((field) => (
+                <FieldCard key={field.id} fieldInfo={field} />
+              ))
+            ) : (
+              <p className="w-full pt-10 text-center font-markaziText text-2xl">
+                There is no subscribed field yet
+              </p>
+            )}
+
+            <div className="mx-auto mt-20">
+              <Pagination pageNumber={page ? +page : 1} isNext={isNext} />
+            </div>
+          </div>
+        )}
       </TabsContent>
     </Tabs>
   );

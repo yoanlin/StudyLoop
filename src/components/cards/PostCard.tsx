@@ -4,6 +4,7 @@ import Link from "next/link";
 import ROUTES from "../../../constants/routes";
 import { calcAverageRating, getTimeStamp } from "@/lib/utils";
 import Image from "next/image";
+import MarkdownRenderer from "../markdown/MarkdownRenderer";
 
 interface Props {
   post: PostCardInfo;
@@ -24,8 +25,9 @@ const PostCard = ({ post }: Props) => {
         <h3 className="line-clamp-1 w-4/5 text-wrap text-2xl font-bold lg:text-3xl">
           {title}
         </h3>
-
-        <p className="line-clamp-1">{content}</p>
+        <div className="line-clamp-1">
+          <MarkdownRenderer content={content} />
+        </div>
 
         <PostDetails author={author} createdAt={createdAt} />
       </Link>
