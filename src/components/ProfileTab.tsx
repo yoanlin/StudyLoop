@@ -83,10 +83,16 @@ export default function ProfileTab({ userId, page, pageSize }: Props) {
       onValueChange={handleTabChange}
     >
       <TabsList className="w-full bg-stone-200 dark:bg-stone-700">
-        <TabsTrigger value="posts" className="w-1/2 text-foreground">
+        <TabsTrigger
+          value="posts"
+          className="h-full w-1/2 font-markaziText text-lg font-bold text-foreground"
+        >
           Posts
         </TabsTrigger>
-        <TabsTrigger value="subscriptions" className="w-1/2 text-foreground">
+        <TabsTrigger
+          value="subscriptions"
+          className="h-full w-1/2 font-markaziText text-lg font-bold text-foreground"
+        >
           Subscriptions
         </TabsTrigger>
       </TabsList>

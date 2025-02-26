@@ -25,12 +25,12 @@ const PostCard = ({ post }: Props) => {
         <h3 className="line-clamp-1 w-4/5 text-wrap text-2xl font-bold lg:text-3xl">
           {title}
         </h3>
-        <div className="line-clamp-1">
-          <MarkdownRenderer content={content} />
-        </div>
 
         <PostDetails author={author} createdAt={createdAt} />
       </Link>
+      <div className="absolute bottom-[6px] line-clamp-1 cursor-pointer">
+        <MarkdownRenderer content={content} />
+      </div>
     </div>
   );
 };
