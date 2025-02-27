@@ -97,7 +97,7 @@ export async function SignUpWithCredentials(formdata: AuthCredentials) {
     await signIn("credentials", {
       email,
       password,
-      redirect: false,
+      redirect: true,
     });
 
     return { success: true };

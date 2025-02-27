@@ -46,6 +46,7 @@ export default function AuthForm<T extends FieldValues>({
     await onSubmit(data);
 
     router.push("/");
+    window.location.reload();
   };
 
   const buttonText = formType === "LOGIN" ? "Log In" : "Sign Up";

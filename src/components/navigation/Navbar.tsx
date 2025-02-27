@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -12,6 +12,14 @@ import { useSession } from "next-auth/react";
 
 const Navbar = ({ isMain }: { isMain?: boolean }) => {
   const { data: session, status } = useSession();
+  const [isLogin, setIsLogin] = useState(false);
+  useEffect(() => {
+    if (status === "authenticated") {
+      setIsLogin(true);
+    } else if (status === "unauthenticated") {
+      setIsLogin(false);
+    }
+  }, [status]);
 
   return (
     <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 max-sm:h-16">
@@ -35,7 +43,7 @@ const Navbar = ({ isMain }: { isMain?: boolean }) => {
           <div className="flex items-center gap-3">
             <ThemeToggle />
 
-            {status === "authenticated" && session.user ? (
+            {isLogin && session && session.user ? (
               <UserAvatar
                 userId={session.user.id!}
                 name={session.user.name!}

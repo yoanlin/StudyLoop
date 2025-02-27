@@ -52,9 +52,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           if (isPasswordValid) {
             return {
               id: existingUser.id,
-              name: existingUser.name,
-              email: existingUser.email,
-              image: existingUser.image,
+              name: existingUser.name ?? "",
+              email: existingUser.email ?? "",
+              image: existingUser.image ?? null,
+              emailVerified: existingUser.emailVerified ?? null,
             };
           }
         }
@@ -63,21 +64,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   session: {
-    strategy: "database", // 使用數據庫作為會話存儲
+    strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 天
   },
   callbacks: {
-    async session({ session, user }) {
-      if (user) {
+    async session({ session, token }) {
+      if (token) {
         session.user = {
-          id: user.id,
-          name: user.name,
-          email: user.email,
-          image: user.image || null,
-          emailVerified: user.emailVerified || null,
+          id: token.id as string,
+          name: token.name as string,
+          email: token.email as string,
+          image: (token.image as string) ?? null,
+          emailVerified: token.emailVerified
+            ? new Date(token.emailVerified as string)
+            : null,
         };
       }
-
       return session;
     },
     async signIn({ user, account, profile }) {
@@ -108,5 +110,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return true;
     },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
+      }
+      return token;
+    },
   },
+  debug: true,
 });

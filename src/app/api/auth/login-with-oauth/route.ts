@@ -1,12 +1,14 @@
 import db from "@/db/db";
+import { setAuthCookie } from "@/lib/authCookies";
+import { signJwtToken } from "@/lib/jwt";
 import { LogInWithOAuthSchema } from "@/lib/validations";
-import { randomBytes } from "crypto";
 import { NextResponse } from "next/server";
 
 // Create User
 export async function POST(req: Request) {
   try {
     const { provider, providerAccountId, user } = await req.json();
+
     const validatedData = LogInWithOAuthSchema.safeParse({
       provider,
       providerAccountId,
@@ -17,9 +19,10 @@ export async function POST(req: Request) {
 
     const { name, username, email, image } = user;
 
-    await db.$transaction(async (tx) => {
-      // 查找 or 創建用戶
-      let existingUser = await tx.user.findUnique({ where: { email } });
+    const result = await db.$transaction(async (tx) => {
+      let existingUser = await tx.user.findUnique({
+        where: { email },
+      });
 
       if (!existingUser) {
         existingUser = await tx.user.create({
@@ -28,27 +31,27 @@ export async function POST(req: Request) {
             username,
             email,
             image,
-            providers: [provider],
           },
         });
       } else {
-        if (!existingUser.providers.includes(provider)) {
+        const updatedData: {
+          name?: string;
+          image?: string;
+        } = {};
+
+        if (existingUser.name !== name) updatedData.name = name;
+        if (existingUser.image !== image) updatedData.image = image;
+
+        if (Object.keys(updatedData).length > 0) {
           await tx.user.update({
-            where: { id: existingUser.id },
-            data: {
-              providers: [...existingUser.providers, provider],
-            },
+            where: { email },
+            data: updatedData,
           });
         }
       }
 
-      // 查找或創建 Account
       const existingAccount = await tx.account.findFirst({
-        where: {
-          userId: existingUser.id,
-          provider,
-          providerAccountId,
-        },
+        where: { userId: existingUser.id, provider, providerAccountId },
       });
 
       if (!existingAccount) {
@@ -62,23 +65,23 @@ export async function POST(req: Request) {
         });
       }
 
-      // 創建 session
-      const sessionToken = randomBytes(32).toString("hex");
-      const expires = new Date();
-      expires.setDate(expires.getDate() + 7); // expires in 7 days
-
-      await tx.session.create({
-        data: {
-          sessionToken,
-          userId: existingUser.id,
-          expires,
-        },
-      });
-
-      return { sessionToken, user: existingUser };
+      return existingUser;
     });
 
-    return NextResponse.json({ success: true });
+    // Generate JWT
+    const jwtPayload = {
+      id: result.id,
+      name: result.name,
+      email: result.email,
+      image: result.image,
+    };
+
+    const token = await signJwtToken(jwtPayload);
+
+    const response = NextResponse.json({ success: true, token });
+    setAuthCookie(response, token);
+
+    return response;
   } catch (error) {
     console.error("Error during login: ", error);
     return NextResponse.json({ success: false, error }, { status: 500 });
