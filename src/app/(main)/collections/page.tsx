@@ -4,6 +4,9 @@ import React from "react";
 import { SearchParams } from "../../../../types/global";
 import FilterSelector from "@/components/FilterSelector";
 import PostCard from "@/components/cards/PostCard";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import ROUTES from "../../../../constants/routes";
 
 const CollectionPage = async ({ searchParams }: SearchParams) => {
   const { query, page, pageSize, filter } = await searchParams;
@@ -14,6 +17,9 @@ const CollectionPage = async ({ searchParams }: SearchParams) => {
     filter: filter || "",
   });
   const { posts } = data || {};
+
+  const session = await auth();
+  if (!session) redirect(ROUTES.LOG_IN);
   return (
     <div className="mt-10 w-full max-w-2xl px-10 sm:ml-20 lg:max-w-4xl">
       <div className="flex w-full max-w-2xl flex-col items-center justify-between gap-5 sm:flex-row">

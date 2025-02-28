@@ -56,7 +56,7 @@ const CollectButton = ({ postId }: { postId: string }) => {
       onClick={handleToggleSave}
       disabled={isLoading}
     >
-      <Bookmark color="#ffffff" className={cn("size-8", isSaved && "hidden")} />
+      <Bookmark className={cn("size-8 text-foreground", isSaved && "hidden")} />
       <span className={"text-foreground"}>{isSaved ? "Saved" : "Save"}</span>
     </Button>
   );

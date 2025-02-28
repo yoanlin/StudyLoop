@@ -17,7 +17,7 @@ const LeaderboardPage = async ({ searchParams }: SearchParams) => {
         <Searchbar
           route="/leaderboard"
           placeholder="Search for user"
-          otherClass="max-w-2xl h-12"
+          otherClass="max-w-3xl h-12"
         />
         <h2 className="mt-8 font-bowlbyOneSC text-2xl">LEADERBOARD</h2>
 

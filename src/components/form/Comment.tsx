@@ -18,6 +18,9 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { useTransition } from "react";
 import { createComment } from "@/lib/actions/comment.action";
+import { LoaderCircle } from "lucide-react";
+import Link from "next/link";
+import ROUTES from "../../../constants/routes";
 
 const Comment = ({ postId }: { postId: string }) => {
   const [isCommenting, startCommentingTransition] = useTransition();
@@ -58,7 +61,10 @@ const Comment = ({ postId }: { postId: string }) => {
         </>
       )}
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
+        <form
+          onSubmit={form.handleSubmit(handleSubmit)}
+          className="flex flex-col space-y-5"
+        >
           <FormField
             control={form.control}
             name="rating"
@@ -103,12 +109,31 @@ const Comment = ({ postId }: { postId: string }) => {
               </FormItem>
             )}
           />
-          <Button
-            type="submit"
-            className="button absolute right-10 top-[100px] w-24 text-lg md:px-14 md:text-xl"
-          >
-            {isCommenting ? "Posting..." : "Comment"}
-          </Button>
+          {status === "authenticated" ? (
+            <Button
+              type="submit"
+              className="button ml-auto w-24 text-lg md:px-14 md:text-xl"
+            >
+              {isCommenting ? (
+                <p>
+                  <LoaderCircle className="animate-spin" />
+                  Posting...
+                </p>
+              ) : (
+                "Comment"
+              )}
+            </Button>
+          ) : (
+            <p className="ml-auto text-xl">
+              <Link
+                href={ROUTES.LOG_IN}
+                className="text-fuchsia-800 underline hover:text-fuchsia-950"
+              >
+                Login
+              </Link>{" "}
+              to share your opinion
+            </p>
+          )}
         </form>
       </Form>
     </div>

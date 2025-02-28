@@ -11,8 +11,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import Pagination from "./Pagination";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
-import ROUTES from "../../constants/routes";
+import { useRouter, useSearchParams } from "next/navigation";
 import { removeKeysFromUrlQuery } from "@/lib/url";
 import { LoaderCircle } from "lucide-react";
 
@@ -73,8 +72,6 @@ export default function ProfileTab({ userId, page, pageSize }: Props) {
     };
     startTransition(fetchData);
   }, [activeTab, page, pageSize, userId]);
-
-  if (!session) redirect(ROUTES.LOG_IN);
 
   return (
     <Tabs

@@ -62,7 +62,7 @@ const PostDetails = async ({ params }: RouteParams) => {
           <CollectButton postId={id} />
         </div>
 
-        <div className="relative mt-20 rounded-lg border px-10 py-6 text-2xl shadow">
+        <div className="mt-20 rounded-lg border px-10 py-6 text-2xl shadow">
           <Comment postId={id} />
         </div>
 

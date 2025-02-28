@@ -65,7 +65,7 @@ const SubscribeButton = ({
     <div className={cn(!session && "hidden", otherClass)}>
       <Button
         className={cn(
-          "font-markaziText text-lg",
+          "font-markaziText text-xl text-foreground",
           isSubscribed
             ? "border-2 bg-white text-foreground shadow-none dark:bg-black"
             : "bg-gray-300 hover:bg-gray-400"
