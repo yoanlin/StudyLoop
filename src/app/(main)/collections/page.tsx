@@ -22,7 +22,7 @@ const CollectionPage = async ({ searchParams }: SearchParams) => {
   if (!session) redirect(ROUTES.LOG_IN);
   return (
     <div className="mt-10 w-full max-w-2xl px-10 sm:ml-20 lg:max-w-4xl">
-      <div className="flex w-full max-w-2xl flex-col items-center justify-between gap-5 sm:flex-row">
+      <div className="flex w-full max-w-2xl flex-col items-center justify-between gap-5 sm:flex-row lg:max-w-4xl">
         <Searchbar
           route="/collections"
           placeholder="Search for collected posts"

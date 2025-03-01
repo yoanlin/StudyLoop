@@ -4,7 +4,7 @@ import { signJwtToken } from "@/lib/jwt";
 import { LogInWithOAuthSchema } from "@/lib/validations";
 import { NextResponse } from "next/server";
 
-// Create User
+// User Signup or Login with OAuth
 export async function POST(req: Request) {
   try {
     const { provider, providerAccountId, user } = await req.json();

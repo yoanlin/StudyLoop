@@ -23,7 +23,7 @@ export default async function Home({ searchParams }: SearchParams) {
       <main className="flex size-full flex-col pb-16">
         <Hero />
         <section className="mt-10 flex flex-col items-center gap-5 px-10 pb-20 md:px-20 lg:max-w-3xl xl:max-w-5xl">
-          <div className="flex w-full max-w-2xl flex-col items-center justify-between gap-5 sm:flex-row">
+          <div className="flex w-full max-w-3xl flex-col items-center justify-between gap-5 sm:flex-row">
             <Searchbar
               route="/"
               placeholder="Search for learning resources"
@@ -48,7 +48,9 @@ export default async function Home({ searchParams }: SearchParams) {
                 posts.map((post) => <PostCard key={post.id} post={post} />)
               ) : (
                 <div>
-                  <p>No posts found</p>
+                  <p className="mt-10 w-full text-center font-markaziText text-2xl">
+                    No posts found🥲
+                  </p>
                 </div>
               )}
             </div>

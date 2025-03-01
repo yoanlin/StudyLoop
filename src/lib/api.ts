@@ -1,4 +1,3 @@
-import { Account, User } from "@prisma/client";
 import ROUTES from "../../constants/routes";
 import { fetchHandler } from "./handlers/fetch";
 
@@ -14,11 +13,6 @@ export const api = {
       }),
   },
   accounts: {
-    create: (accountData: Account) =>
-      fetchHandler(`${API_BASE_URL}/accounts`, {
-        method: "POST",
-        body: JSON.stringify(accountData),
-      }),
     getByProvider: (providerAccountId: string) =>
       fetchHandler(`${API_BASE_URL}/accounts/provider`, {
         method: "POST",
@@ -26,11 +20,6 @@ export const api = {
       }),
   },
   users: {
-    create: (userData: User) =>
-      fetchHandler(`${API_BASE_URL}/users`, {
-        method: "POST",
-        body: JSON.stringify(userData),
-      }),
     getById: (id: string) => fetchHandler(`${API_BASE_URL}/users/${id}`),
     uploadProfileImage: (formdata: FormData) =>
       fetchHandler(`${API_BASE_URL}/users/upload-profile-image`, {

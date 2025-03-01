@@ -25,7 +25,9 @@ const FieldCard = ({ fieldInfo }: Props) => {
           height={45}
           className="h-auto justify-self-start object-contain"
         />
-        <p className="line-clamp-1 text-center font-bold">{fieldInfo.name}</p>
+        <p className="line-clamp-1 text-center font-semibold">
+          {fieldInfo.name}
+        </p>
       </div>
     </Link>
   );

@@ -43,7 +43,9 @@ const FieldsPage = async ({ searchParams }: SearchParams) => {
                 <FieldCard key={field.id} fieldInfo={field} />
               ))
             ) : (
-              <p>No fields found</p>
+              <p className="mt-10 w-full text-center font-markaziText text-2xl">
+                No fields found🥲
+              </p>
             )
           ) : (
             <p>{error?.message || "Failed to fetch fields"}</p>

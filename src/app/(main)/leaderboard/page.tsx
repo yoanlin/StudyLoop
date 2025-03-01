@@ -28,7 +28,9 @@ const LeaderboardPage = async ({ searchParams }: SearchParams) => {
             ))}
           </section>
         ) : (
-          <p className="mt-10 text-center">No user found🥲</p>
+          <p className="mt-10 w-full max-w-3xl text-center font-markaziText text-2xl">
+            No user found🥲
+          </p>
         )}
       </div>
     );

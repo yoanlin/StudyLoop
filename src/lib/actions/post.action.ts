@@ -549,17 +549,36 @@ export async function deletePost(
     if (userId !== authorId) throw new UnauthorizedError();
 
     const post = await db.post.findUnique({
-      where: {
-        id: postId,
-      },
+      where: { id: postId },
+      select: { fieldId: true },
     });
-
     if (!post) throw new Error("Post not found");
 
+    const fieldId = post.fieldId;
+
     await db.$transaction(async (tx) => {
-      await tx.comment.deleteMany({ where: { postId } });
-      await tx.postCollector.deleteMany({ where: { postId } });
+      await Promise.all([
+        await tx.comment.deleteMany({ where: { postId } }),
+        await tx.postCollector.deleteMany({ where: { postId } }),
+      ]);
+
       await tx.post.delete({ where: { id: postId } });
+
+      const remainingPosts = await tx.post.count({
+        where: { fieldId },
+      });
+
+      if (remainingPosts === 0) {
+        await Promise.all([
+          tx.field.delete({ where: { id: fieldId } }),
+          tx.userSubscription.deleteMany({ where: { fieldId } }),
+        ]);
+      } else {
+        await tx.field.update({
+          where: { id: post.fieldId },
+          data: { postCount: remainingPosts },
+        });
+      }
     });
 
     return { success: true, data: postId };

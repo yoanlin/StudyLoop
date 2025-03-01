@@ -14,7 +14,7 @@ model Post {
   author       User     @relation("AuthorPosts",fields: [authorId], references: [id])
   content      String
   fieldId      String   @db.ObjectId
-  field        Field    @relation(fields: [fieldId], references: [id])
+  field        Field    @relation(fields: [fieldId], references: [id], onDelete: Cascade)
   comments     Comment[]
   collectors   PostCollector[]
   createdAt    DateTime @default(now())

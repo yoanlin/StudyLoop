@@ -16,13 +16,13 @@ const Navbar = ({ isMain }: { isMain?: boolean }) => {
     <nav className="sticky top-0 z-50 flex h-24 items-center justify-between border-b bg-primary px-6 max-sm:h-16">
       <div className="flex cursor-pointer gap-5">
         <MobileNav />
-        <Link href="/" className="flex gap-5">
+        <Link href="/" className="flex items-center gap-5">
           <Image
             src="/boat.png"
             alt="logo"
             width={50}
             height={50}
-            className="size-auto -translate-y-3"
+            className="size-auto"
           />
           <h1 className="font-bowlbyOneSC text-3xl max-sm:hidden">
             STUDY LOOP
