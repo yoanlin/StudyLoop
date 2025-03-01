@@ -53,7 +53,12 @@ export async function LogInWithCredentials(
     return { success: true };
   } catch (error) {
     console.error(error);
-    return { success: false };
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown Error",
+      },
+    };
   }
 }
 export async function SignUpWithCredentials(formdata: AuthCredentials) {
@@ -97,7 +102,7 @@ export async function SignUpWithCredentials(formdata: AuthCredentials) {
     await signIn("credentials", {
       email,
       password,
-      redirect: true,
+      redirect: false,
     });
 
     return { success: true };

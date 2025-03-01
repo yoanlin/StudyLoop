@@ -38,7 +38,7 @@ const UserAvatar = ({ userId, name, imageUrl }: Props) => {
           {name}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-xl">
+        <DropdownMenuItem asChild className="text-xl">
           <Link href={ROUTES.PROFILE(userId)}>Profile</Link>
         </DropdownMenuItem>
         <DropdownMenuItem className="py-2 text-xl" onClick={() => signOut()}>

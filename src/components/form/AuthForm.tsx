@@ -22,6 +22,7 @@ import Link from "next/link";
 import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 interface AuthFormProps<T extends FieldValues> {
   formType: "LOGIN" | "SIGNUP";
@@ -36,6 +37,7 @@ export default function AuthForm<T extends FieldValues>({
   defaultValues,
   onSubmit,
 }: AuthFormProps<T>) {
+  const { update } = useSession();
   const router = useRouter();
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -43,10 +45,14 @@ export default function AuthForm<T extends FieldValues>({
   });
 
   const handleSubmit: SubmitHandler<T> = async (data) => {
-    await onSubmit(data);
+    const { success, error } = (await onSubmit(data)) as ActionResponse;
 
-    router.push("/");
-    window.location.reload();
+    if (success) {
+      await update();
+      router.push("/");
+    } else {
+      alert(`(Login Failed) ${error?.message}`);
+    }
   };
 
   const buttonText = formType === "LOGIN" ? "Log In" : "Sign Up";
