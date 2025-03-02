@@ -148,3 +148,17 @@ export const DeletePostSchema = z.object({
   postId: z.string().min(1, { message: "Post ID is required." }),
   authorId: z.string().min(1, { message: "Author ID is required." }),
 });
+
+export const DeleteCommentSchema = z.object({
+  commentId: z.string().min(1, { message: "Comment ID is required." }),
+  authorId: z.string().min(1, { message: "Author ID is required." }),
+});
+
+export const EditCommentSchema = DeleteCommentSchema.extend({
+  content: z.string().min(10, { message: "Post ID is required" }),
+  rating: z
+    .number()
+    .int()
+    .positive()
+    .max(10, { message: "Rating must not higher than 10" }),
+});

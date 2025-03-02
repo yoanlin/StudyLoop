@@ -39,7 +39,11 @@ const PostDetails = async ({ params }: RouteParams) => {
                   : "(No comments yet)"}
               </span>
             </p>
-            <EditDeleteButton postId={id} authorId={data.authorId} />
+            <EditDeleteButton
+              postId={id}
+              authorId={data.authorId}
+              type={"post"}
+            />
           </h2>
 
           <Link href={`/profile/${data.author.id}`}>

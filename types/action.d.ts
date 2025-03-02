@@ -55,6 +55,16 @@ interface CreateCommentParams {
   rating: number;
 }
 
+interface DeleteCommentParams {
+  commentId: string;
+  authorId: string;
+}
+
+interface EditCommentParams extends DeleteCommentParams {
+  content: string;
+  rating: number;
+}
+
 interface SubscribeParams {
   fieldId: string;
 }

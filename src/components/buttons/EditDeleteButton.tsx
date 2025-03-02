@@ -7,51 +7,82 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import Link from "next/link";
 import ROUTES from "../../../constants/routes";
 import { cn } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { deletePost } from "@/lib/actions/post.action";
 import { useRouter } from "next/navigation";
+import { deleteComment } from "@/lib/actions/comment.action";
 
 interface Props {
-  postId: string;
+  type: "post" | "comment";
   authorId: string;
+  postId?: string;
+  commentId?: string;
+  setIsEditing?: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const EditDeleteButton = ({ postId, authorId }: Props) => {
+
+const EditDeleteButton = ({
+  type,
+  authorId,
+  postId,
+  commentId,
+  setIsEditing,
+}: Props) => {
   const { data: session } = useSession();
   const isAuthor = session?.user?.id === authorId;
   const router = useRouter();
-  const handleDelete = async (postId: string, authorId: string) => {
-    const { success, error } = await deletePost({ postId, authorId });
 
-    if (success) {
-      alert("Post has been deleted successfully");
-      router.push(ROUTES.PROFILE(authorId));
-    } else {
-      console.error(error);
-      alert("Failed to delete post");
+  const handleDelete = async () => {
+    if (type === "post" && postId) {
+      const { success, error } = await deletePost({ postId, authorId });
+
+      if (success) {
+        alert("Post has been deleted successfully");
+        router.push(ROUTES.PROFILE(authorId));
+      } else {
+        console.error(error);
+        alert("Failed to delete post");
+      }
+    } else if (type === "comment" && commentId) {
+      const { success, error } = await deleteComment({ commentId, authorId });
+
+      if (success) {
+        window.location.reload();
+      } else {
+        console.error(error);
+        alert(`(Deletion Failed) ${error?.message}`);
+      }
+    }
+  };
+
+  const handleEdit = () => {
+    if (type === "post" && postId) {
+      router.push(`${ROUTES.EDIT(postId)}`);
+    } else if (type === "comment" && setIsEditing) {
+      setIsEditing(true);
     }
   };
 
   return (
-    <div className={cn("ml-auto", !isAuthor && "hidden")}>
+    <div
+      className={cn(
+        "flex items-center",
+        type === "post" && "ml-auto",
+        !isAuthor && "hidden"
+      )}
+    >
       <DropdownMenu>
         <DropdownMenuTrigger className="size-5 focus:outline-none">
           <EllipsisVertical color="#808080" size={20} />
         </DropdownMenuTrigger>
         <DropdownMenuContent className="font-markaziText">
-          <DropdownMenuItem>
-            <Link
-              href={ROUTES.EDIT(postId)}
-              className="flex w-full items-center gap-5 text-lg"
-            >
-              <PenLine className="size-[16]" />
-              <span>Edit</span>
-            </Link>
+          <DropdownMenuItem onClick={handleEdit} className="flex gap-5 text-lg">
+            <PenLine size={22} />
+            <span>Edit</span>
           </DropdownMenuItem>
           <DropdownMenuItem
-            onClick={() => handleDelete(postId, authorId)}
+            onClick={handleDelete}
             className="flex gap-5 text-lg"
           >
             <Trash2 size={22} />

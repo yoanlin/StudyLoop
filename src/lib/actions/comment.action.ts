@@ -1,9 +1,14 @@
 "use server";
 
 import action from "../handlers/action";
-import { CommentServerSchema, GetCommentSchema } from "../validations";
+import {
+  CommentServerSchema,
+  DeleteCommentSchema,
+  EditCommentSchema,
+  GetCommentSchema,
+} from "../validations";
 import db from "@/db/db";
-import { NotFoundError } from "../errors";
+import { NotFoundError, UnauthorizedError } from "../errors";
 import { Comment } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import ROUTES from "../../../constants/routes";
@@ -90,6 +95,91 @@ export async function createComment(
       success: false,
       error: {
         message: error instanceof Error ? error.message : "Unknown error",
+      },
+    };
+  }
+}
+
+export async function deleteComment(formdata: DeleteCommentParams) {
+  const validationResult = await action({
+    formdata,
+    schema: DeleteCommentSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return { success: false, error: { message: validationResult.message } };
+
+  const { authorId, commentId } = validationResult.formdata!;
+  const userId = validationResult.session?.user?.id;
+
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    if (authorId !== userId) throw new UnauthorizedError();
+
+    const comment = await db.comment.findUnique({
+      where: { id: commentId },
+    });
+
+    if (!comment) throw new Error("Comment not found");
+
+    await db.comment.delete({
+      where: { id: commentId },
+    });
+
+    return { success: true, data: commentId };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown Error",
+      },
+    };
+  }
+}
+
+export async function editComment(formdata: EditCommentParams) {
+  const validationResult = await action({
+    formdata,
+    schema: EditCommentSchema,
+    authorize: true,
+  });
+
+  if (validationResult instanceof Error)
+    return { success: false, error: { message: validationResult.message } };
+
+  const { authorId, commentId, content, rating } = validationResult.formdata!;
+  const userId = validationResult.session?.user?.id;
+
+  if (!userId) throw new NotFoundError("User");
+
+  try {
+    if (userId !== authorId) throw new UnauthorizedError();
+
+    await db.$transaction(async (tx) => {
+      const comment = await tx.comment.findUnique({
+        where: { id: commentId },
+      });
+
+      if (!comment) throw new Error("Comment not found");
+
+      if (content !== comment.content || rating !== comment.rating) {
+        await tx.comment.update({
+          where: { id: commentId },
+          data: { content, rating },
+        });
+      }
+    });
+
+    return { success: true, data: commentId };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      error: {
+        message: error instanceof Error ? error.message : "Unknown Error",
       },
     };
   }
