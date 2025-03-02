@@ -1,6 +1,6 @@
 import Comment from "@/components/form/Comment";
 import { getPost } from "@/lib/actions/post.action";
-import { calcAverageRating, getTimeStamp } from "@/lib/utils";
+import { calcAverageRating, cn, getTimeStamp } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -10,18 +10,26 @@ import SubscribeButton from "@/components/buttons/SubscribeButton";
 import CollectButton from "@/components/buttons/CollectButton";
 import EditDeleteButton from "@/components/buttons/EditDeleteButton";
 import MarkdownRenderer from "@/components/markdown/MarkdownRenderer";
+import { auth } from "@/auth";
 
 const PostDetails = async ({ params }: RouteParams) => {
+  const session = await auth();
   const { id } = await params;
-  const { data, error, success } = await getPost({ postId: id });
+  const { data, error, success } = await getPost({
+    postId: id,
+    userId: session?.user?.id,
+  });
 
   if (success && data) {
     const averageRating = calcAverageRating(
       data.comments.map((comment) => ({ rating: comment.rating }))
     );
+
+    const isAuthor = session?.user?.id === data.authorId;
+
     return (
       <div className="max-w-5xl p-10 font-markaziText text-xl">
-        <div className="space-y-5">
+        <div className="mb-28 space-y-5">
           <Link
             href={ROUTES.FIELD(data.fieldId)}
             className="mr-5 inline-block rounded-lg bg-secondary px-3 py-1"
@@ -59,14 +67,17 @@ const PostDetails = async ({ params }: RouteParams) => {
             </p>
           </Link>
 
-          <div>
-            <MarkdownRenderer content={data.content} />
-          </div>
+          <MarkdownRenderer content={data.content} />
 
           <CollectButton postId={id} />
         </div>
 
-        <div className="mt-20 rounded-lg border px-10 py-6 text-2xl shadow">
+        <div
+          className={cn(
+            "rounded-lg border px-10 py-6 text-2xl shadow",
+            data.hasCommented || (isAuthor && "hidden")
+          )}
+        >
           <Comment postId={id} />
         </div>
 

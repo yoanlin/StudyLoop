@@ -4,6 +4,7 @@ interface GetPostOutput extends Post {
   field: Field;
   author: User;
   comments: Comment[];
+  hasCommented: boolean;
 }
 
 interface PaginatedSearchParams {

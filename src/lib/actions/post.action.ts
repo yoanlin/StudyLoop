@@ -177,7 +177,7 @@ export async function getPost(
   if (validationResult instanceof Error) {
     return { success: false, error: { message: validationResult.message } };
   }
-  const { postId } = validationResult.formdata!;
+  const { postId, userId } = validationResult.formdata!;
 
   try {
     const post = await db.post.findUnique({
@@ -187,7 +187,11 @@ export async function getPost(
 
     if (!post) throw new Error("Post not found");
 
-    return { success: true, data: JSON.parse(JSON.stringify(post)) };
+    const hasCommented = post.comments.some(
+      (comment) => comment.createdById === userId
+    );
+
+    return { success: true, data: { ...post, hasCommented } };
   } catch (error) {
     console.error(error);
     return {

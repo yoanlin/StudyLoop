@@ -38,6 +38,7 @@ interface EditPostParams extends CreatePostParams {
 
 interface GetPostParams {
   postId: string;
+  userId?: string;
 }
 
 interface RouteParams {
