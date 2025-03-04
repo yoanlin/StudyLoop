@@ -1,36 +1,64 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Study Loop - A Learning & Knowledge Sharing Platform
+=== 
+
+#### Study Loop is an open knowledge-sharing platform designed for learners to share, bookmark, and review educational resources while engaging in discussions. Built with Next.js 15, React 19, TypeScript, TailwindCSS, and integrated with Auth.js for OAuth & Credentials authentication.
+
+
+## Features
+🎯 Learning Resource Sharing
+
+    Users can post educational resources (articles, videos, books, etc.).
+    Categorization allow for easy searching.
+
+🔍 Resource Search & Bookmarking
+
+    Quick search by entering keywords.
+    Bookmark favorite learning resources for later access.
+
+💬 Discussion & Ratings
+
+    Comment on learning resources and exchange knowledge.
+    Rate resources to help others find quality content.
+
+🔑 User Authentication
+
+    Supports Google & GitHub OAuth login.
+    Also supports Credentials (Email/Password) authentication.
+    Uses Auth.js with JWT for authentication.
+
+## Tech Stack
+| Next.js 15 | Framework with App Router for SSR & API handling |
+| :-- | :-- |
+| React 19 | UI architecture |
+| TypeScript  | Static typing for better reliability |
+| TailwindCSS | Utility-first CSS framework |
+| Auth.js | Authentication with OAuth & Credentials |
+| Prisma ORM | Database connection with MongoDB |
+| MongoDB | NoSQL database for users, posts, comments, etc. |
+| Zod | Schema validation for forms |
+| React Hook Form | Form management with improved performance |
+| ShadCN UI | Modern UI components |
+
+## UI/UX Design
+
+* Fully responsive (Mobile & Desktop)
+* Dark mode support
+* Clean & modern UI with ShadCN UI components
 
 ## Getting Started
+    DATABASE_URL=mongodb+srv://your-mongo-url
+    AUTH_SECRET=your-auth-secret
+    AUTH_GITHUB_ID=your-github-client-id
+    AUTH_GITHUB_SECRET=your-github-client-secret
+    AUTH_GOOGLE_ID=your-google-client-id
+    AUTH_GOOGLE_SECRET=your-google-client-secret
+    
+### 👤 Demo Account
 
-First, run the development server:
+To test **Study Loop** without signing up,  use this demo account:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Email**: `demo@example.com`
+- **Password**: `demopassword`
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
