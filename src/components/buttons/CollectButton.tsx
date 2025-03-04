@@ -3,30 +3,29 @@ import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { Bookmark } from "lucide-react";
 import { useSession } from "next-auth/react";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 import { Button } from "../ui/button";
 import { toggleSavePost } from "@/lib/actions/post.action";
+import { redirect } from "next/navigation";
+import ROUTES from "../../../constants/routes";
 
 const CollectButton = ({ postId }: { postId: string }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [isSaved, setIsSaved] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const checkIsSaved = async () => {
       if (!userId) return;
-
-      try {
-        const response = (await api.collections.checkCollections(
-          userId,
-          postId
-        )) as ActionResponse<{ isSaved: boolean }>;
-        if (response.success && response.data!.isSaved) {
-          setIsSaved(response.data!.isSaved);
-        }
-      } catch (error) {
-        console.error("Failed to check collection: ", error);
+      const { success, data, error } = (await api.collections.checkCollections(
+        userId,
+        postId
+      )) as ActionResponse<{ isSaved: boolean }>;
+      if (success && data) {
+        setIsSaved(data.isSaved);
+      } else {
+        console.error("Failed to check collection: ", error?.message);
       }
     };
 
@@ -34,16 +33,16 @@ const CollectButton = ({ postId }: { postId: string }) => {
   }, [postId, userId]);
 
   const handleToggleSave = async () => {
-    try {
-      setIsLoading(true);
-      const response = await toggleSavePost({ postId });
+    if (!userId) redirect(ROUTES.LOG_IN);
 
-      if (response.success) setIsSaved(response.data!.isSaved);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    startTransition(async () => {
+      const { success, data, error } = await toggleSavePost({ postId });
+      if (success) {
+        setIsSaved(data!.isSaved);
+      } else {
+        alert(`(Operation Failed) ${error?.message}`);
+      }
+    });
   };
   return (
     <Button
@@ -54,7 +53,7 @@ const CollectButton = ({ postId }: { postId: string }) => {
           : "bg-gray-300 hover:bg-gray-400"
       )}
       onClick={handleToggleSave}
-      disabled={isLoading}
+      disabled={isPending}
     >
       <Bookmark className={cn("size-8 text-foreground", isSaved && "hidden")} />
       <span className={"text-foreground"}>{isSaved ? "Saved" : "Save"}</span>

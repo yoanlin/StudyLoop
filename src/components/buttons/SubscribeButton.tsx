@@ -1,7 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useTransition } from "react";
 
 import { toggleFieldSubscription } from "@/lib/actions/field.action";
 
@@ -20,20 +20,17 @@ const SubscribeButton = ({
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
     const checkSubscription = async () => {
       if (!userId) return;
 
       try {
-        console.log("try to get response...");
         const response = (await api.subscriptions.checkSubscription(
           userId,
           fieldId
         )) as ActionResponse<{ isSubscribed: boolean }>;
-
-        console.log("API Response: ", response);
 
         if (response.success && response.data) {
           setIsSubscribed(response.data.isSubscribed);
@@ -49,20 +46,21 @@ const SubscribeButton = ({
   const handleToggleSubscription = async () => {
     if (!userId) return redirect(ROUTES.LOG_IN);
 
-    setLoading(true);
+    startTransition(async () => {
+      const { success, data, error } = await toggleFieldSubscription({
+        fieldId,
+      });
 
-    try {
-      const response = await toggleFieldSubscription({ fieldId });
-      if (response.success) setIsSubscribed(response.data!.isSubscribed);
-    } catch (error) {
-      console.error("Subscription error: ", error);
-    } finally {
-      setLoading(false);
-    }
+      if (success && data) {
+        setIsSubscribed(data.isSubscribed);
+      } else {
+        alert(`(Operation Failed) ${error?.message}`);
+      }
+    });
   };
 
   return (
-    <div className={cn(!session && "hidden", otherClass)}>
+    <div className={cn(session ?? "hidden", otherClass)}>
       <Button
         className={cn(
           "font-markaziText text-xl text-foreground",
@@ -71,7 +69,7 @@ const SubscribeButton = ({
             : "bg-gray-300 hover:bg-gray-400"
         )}
         onClick={handleToggleSubscription}
-        disabled={loading}
+        disabled={isPending}
       >
         {isSubscribed ? "Subscribed✔️" : "Subscribe"}
       </Button>
