@@ -186,14 +186,45 @@ h6 {
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  --font-mono:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+    "Courier New", monospace;
 
   color: var(--baseText);
   --basePageBg: black;
-  background: var(--basePageBg);
+  background: transparent;
 }
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+.mdxeditor-popup-container {
+  position: absolute !important;
+  top: 0 !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 50 !important;
+  max-width: 100% !important;
+}
+
+._dialogContent_uazmk_602 {
+  transform: translate(-50%, 50%) !important;
+  flex-direction: column;
+}
+
+._dialogContent_uazmk_602 h2 {
+  font-family: var(--font-markaziText);
+}
+
+._linkDialogPopoverContent_uazmk_600 {
+  transform: translateX(8%);
+}
+
+@media screen and (min-width: 640px) {
+  ._linkDialogPopoverContent_uazmk_600 {
+    transform: translateX(40%);
+  }
+}
+
+@media screen and (min-width: );

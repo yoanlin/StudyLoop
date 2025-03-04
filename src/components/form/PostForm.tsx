@@ -99,12 +99,11 @@ const PostForm = ({ post, isEdit = false }: Params) => {
                 Please share your thoughts and resources here.
               </FormLabel>
               <FormControl>
-                <div className="size-full max-w-3xl border">
+                <div className="size-full max-w-3xl overflow-hidden border">
                   <Editor
                     editorRef={editorRef}
                     value={field.value}
                     fieldChange={field.onChange}
-                    otherClass="min-h-[400px] max-w-[800px]"
                   />
                 </div>
               </FormControl>

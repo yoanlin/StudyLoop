@@ -33,22 +33,15 @@ import {
 interface Props {
   value: string;
   fieldChange: (value: string) => void;
-  otherClass?: string;
   editorRef: ForwardedRef<MDXEditorMethods> | null;
 }
 
-const Editor = ({
-  value,
-  editorRef,
-  otherClass,
-  fieldChange,
-  ...props
-}: Props) => {
+const Editor = ({ value, editorRef, fieldChange, ...props }: Props) => {
   return (
     <MDXEditor
       markdown={value}
       ref={editorRef}
-      className={`dark-editor prose relative rounded-md border border-transparent ${otherClass}`}
+      className={`dark-editor prose relative min-h-[400px] max-w-[800px] rounded-md`}
       onChange={fieldChange}
       plugins={[
         // Example Plugin Usage

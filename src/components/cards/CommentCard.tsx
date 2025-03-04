@@ -99,7 +99,7 @@ const CommentCard = ({ info }: { info: GetCommentsOutput }) => {
           <div className="flex w-full gap-5">
             {" "}
             <p className="mt-8">{newContent}</p>{" "}
-            <p className="ml-auto flex size-16 items-center justify-center rounded-lg border font-bold shadow">
+            <p className="ml-auto flex size-16 items-center justify-center rounded-lg border px-3 font-bold shadow">
               {newRating}/10
             </p>
           </div>

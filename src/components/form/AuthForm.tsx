@@ -87,7 +87,7 @@ export default function AuthForm<T extends FieldValues>({
         <Button
           type="submit"
           disabled={form.formState.isSubmitting}
-          className="button mt-5 w-full sm:w-auto"
+          className="button mt-5 w-full items-center sm:w-auto"
         >
           {form.formState.isSubmitting
             ? buttonText === "Log In"
