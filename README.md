@@ -2,7 +2,7 @@ Study Loop - A Learning & Knowledge Sharing Platform
 === 
 
 #### Study Loop is an open knowledge-sharing platform designed for learners to share, bookmark, and review educational resources while engaging in discussions. Built with Next.js 15, React 19, TypeScript, TailwindCSS, and integrated with Auth.js for OAuth & Credentials authentication.
-
+https://study-loop.vercel.app/
 
 ## Features
 🎯 Learning Resource Sharing
