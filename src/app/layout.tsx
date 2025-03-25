@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "./context/ThemeProvider";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import Toast from "@/components/ui/Toast";
 
 const bowlbyOneSC = Bowlby_One_SC({
   variable: "--font-bowlbyOneSC",
@@ -44,6 +45,7 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             {children}
+            <Toast />
           </ThemeProvider>
         </body>
       </SessionProvider>

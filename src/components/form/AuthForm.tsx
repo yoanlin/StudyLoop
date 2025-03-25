@@ -23,6 +23,7 @@ import { z, ZodType } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { useToastStore } from "@/store/toastStore";
 
 interface AuthFormProps<T extends FieldValues> {
   formType: "LOGIN" | "SIGNUP";
@@ -44,14 +45,22 @@ export default function AuthForm<T extends FieldValues>({
     defaultValues: defaultValues as DefaultValues<T>,
   });
 
+  const { showToast } = useToastStore();
+
   const handleSubmit: SubmitHandler<T> = async (data) => {
     const { success, error } = (await onSubmit(data)) as ActionResponse;
 
     if (success) {
       await update();
+      showToast(
+        formType === "LOGIN"
+          ? "Logged in successfully"
+          : "Sign up successfully",
+        "success"
+      );
       router.push("/");
     } else {
-      alert(`(Login Failed) ${error?.message}`);
+      showToast(`(Login Failed) ${error?.message}`, "error");
     }
   };
 

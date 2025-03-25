@@ -2,17 +2,24 @@
 import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
+import { useToastStore } from "@/store/toastStore";
 
 const SocialAuthForm = () => {
+  const { showToast } = useToastStore();
+  const { update } = useSession();
   const handleSignIn = async (provider: "github" | "google") => {
     try {
       await signIn(provider, {
         redirectTo: "/",
         redirect: false,
       });
+
+      await update();
+      showToast("Logged in successfully", "success");
     } catch (error) {
       console.log(error);
+      showToast("Failed to log in", "error");
     }
   };
   return (
