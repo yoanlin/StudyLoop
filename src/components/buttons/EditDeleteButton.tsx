@@ -13,6 +13,7 @@ import { useSession } from "next-auth/react";
 import { deletePost } from "@/lib/actions/post.action";
 import { useRouter } from "next/navigation";
 import { deleteComment } from "@/lib/actions/comment.action";
+import { useToastStore } from "@/store/toastStore";
 
 interface Props {
   type: "post" | "comment";
@@ -32,26 +33,30 @@ const EditDeleteButton = ({
   const { data: session } = useSession();
   const isAuthor = session?.user?.id === authorId;
   const router = useRouter();
+  const showToast = useToastStore((state) => state.showToast);
 
   const handleDelete = async () => {
     if (type === "post" && postId) {
       const { success, error } = await deletePost({ postId, authorId });
 
       if (success) {
-        alert("Post has been deleted successfully");
+        showToast("Post deleted successfully", "success");
         router.push(ROUTES.PROFILE(authorId));
       } else {
         console.error(error);
-        alert("Failed to delete post");
+        showToast(`(Deletion Failed) ${error?.message}`, "error");
       }
     } else if (type === "comment" && commentId) {
       const { success, error } = await deleteComment({ commentId, authorId });
 
       if (success) {
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+        showToast("Comment deleted successfully", "success");
       } else {
         console.error(error);
-        alert(`(Deletion Failed) ${error?.message}`);
+        showToast(`(Deletion Failed) ${error?.message}`, "error");
       }
     }
   };

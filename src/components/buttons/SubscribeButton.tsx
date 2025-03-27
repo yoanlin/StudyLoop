@@ -9,6 +9,7 @@ import { api } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import ROUTES from "../../../constants/routes";
 import { Button } from "../ui/button";
+import { useToastStore } from "@/store/toastStore";
 
 const SubscribeButton = ({
   fieldId,
@@ -21,6 +22,7 @@ const SubscribeButton = ({
   const userId = session?.user?.id;
   const [isSubscribed, setIsSubscribed] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
+  const showToast = useToastStore((state) => state.showToast);
 
   useEffect(() => {
     const checkSubscription = async () => {
@@ -53,8 +55,12 @@ const SubscribeButton = ({
 
       if (success && data) {
         setIsSubscribed(data.isSubscribed);
+        showToast(
+          data.isSubscribed ? "Field subscribed " : "Field unsubscribed ",
+          "success"
+        );
       } else {
-        alert(`(Operation Failed) ${error?.message}`);
+        showToast(error?.message ?? "Operation failed", "error");
       }
     });
   };

@@ -10,12 +10,14 @@ import { Input } from "../ui/input";
 import EditDeleteButton from "../buttons/EditDeleteButton";
 import { Button } from "../ui/button";
 import { editComment } from "@/lib/actions/comment.action";
+import { useToastStore } from "@/store/toastStore";
 
 const CommentCard = ({ info }: { info: GetCommentsOutput }) => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [newContent, setNewContent] = useState<string>(info.content);
   const [newRating, setNewRating] = useState<number>(info.rating);
   const [isPending, startTransition] = useTransition();
+  const showToast = useToastStore((state) => state.showToast);
 
   const handleEdit = () => {
     startTransition(async () => {
@@ -28,9 +30,12 @@ const CommentCard = ({ info }: { info: GetCommentsOutput }) => {
 
       if (success) {
         setIsEditing(false);
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
+        showToast("Comment edited successfully", "success");
       } else {
-        alert(`(Editting Failed) ${error?.message}`);
+        showToast(error?.message || "Failed to edit comment", "error");
       }
     });
   };

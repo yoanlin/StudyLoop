@@ -3,18 +3,20 @@ import React from "react";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { signIn } from "next-auth/react";
+import { useToastStore } from "@/store/toastStore";
 
 const SocialAuthForm = () => {
+  const showToast = useToastStore((state) => state.showToast);
+
   const handleSignIn = async (provider: "github" | "google") => {
     try {
-      await signIn(provider, {
-        redirectTo: "/",
-        redirect: false,
-      });
+      await signIn(provider, { redirectTo: "/?loggedIn=true" });
     } catch (error) {
       console.log(error);
+      showToast("Failed to log in", "error");
     }
   };
+
   return (
     <div className="flex flex-col justify-between gap-3 sm:flex-row">
       <Button
