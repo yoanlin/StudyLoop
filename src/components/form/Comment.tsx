@@ -120,7 +120,7 @@ const Comment = ({ postId }: { postId: string }) => {
               className="button ml-auto w-24 text-lg md:px-14 md:text-xl"
             >
               {isCommenting ? (
-                <p>
+                <p className="flex items-center gap-2">
                   <LoaderCircle className="animate-spin" />
                   Posting...
                 </p>

@@ -30,7 +30,9 @@ const CommentCard = ({ info }: { info: GetCommentsOutput }) => {
 
       if (success) {
         setIsEditing(false);
-        window.location.reload();
+        setTimeout(() => {
+          window.location.reload();
+        }, 3000);
         showToast("Comment edited successfully", "success");
       } else {
         showToast(error?.message || "Failed to edit comment", "error");

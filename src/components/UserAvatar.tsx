@@ -24,17 +24,6 @@ interface Props {
 
 const UserAvatar = ({ userId, name, imageUrl }: Props) => {
   const { showToast } = useToastStore();
-
-  const handleSignOut = async () => {
-    try {
-      await signOut({ redirect: false }); // Prevent default redirection
-      showToast("Logged out successfully", "success");
-    } catch (error) {
-      console.error("Error during sign out:", error);
-      showToast("Failed to log out", "error");
-    }
-  };
-
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none">
@@ -54,7 +43,13 @@ const UserAvatar = ({ userId, name, imageUrl }: Props) => {
         <DropdownMenuItem asChild className="text-xl">
           <Link href={ROUTES.PROFILE(userId)}>Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="py-2 text-xl" onClick={handleSignOut}>
+        <DropdownMenuItem
+          className="py-2 text-xl"
+          onClick={() => {
+            signOut({ redirect: false });
+            showToast("Logged out successfully", "success");
+          }}
+        >
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
