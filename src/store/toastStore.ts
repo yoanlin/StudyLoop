@@ -24,7 +24,7 @@ export const useToastStore = create<ToastStore>((set) => ({
       set((state) => ({
         toasts: state.toasts.filter((toast) => toast.id !== id),
       }));
-    }, 4000);
+    }, 3000);
 
     set((state) => ({
       toasts: [...state.toasts, { id, message, type, timeoutId }],
@@ -56,7 +56,7 @@ export const useToastStore = create<ToastStore>((set) => ({
         set((state) => ({
           toasts: state.toasts.filter((t) => t.id !== id),
         }));
-      }, 4000);
+      }, 3000);
       return {
         toasts: state.toasts.map((t) =>
           t.id === id ? { ...t, timeoutId: newTimeoutId } : t

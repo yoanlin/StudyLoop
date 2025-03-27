@@ -20,6 +20,7 @@ import { createPost, editPost } from "@/lib/actions/post.action";
 import { useRouter } from "next/navigation";
 import ROUTES from "../../../constants/routes";
 import { GetPostOutput } from "../../../types/global";
+import { useToastStore } from "@/store/toastStore";
 
 const Editor = dynamic(() => import("@/components/editor"), { ssr: false });
 
@@ -32,6 +33,7 @@ const PostForm = ({ post, isEdit = false }: Params) => {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const editorRef = useRef<MDXEditorMethods>(null);
+  const showToast = useToastStore((state) => state.showToast);
 
   const form = useForm<z.infer<typeof CreatePostSchema>>({
     resolver: zodResolver(CreatePostSchema),
@@ -46,11 +48,21 @@ const PostForm = ({ post, isEdit = false }: Params) => {
     startTransition(async () => {
       if (isEdit && post) {
         const result = await editPost({ postId: post?.id, ...data });
-        if (result.data) router.push(ROUTES.POST(result.data?.id));
+        if (result.data) {
+          router.push(ROUTES.POST(result.data?.id));
+          showToast("Post edited successfully", "success");
+        } else {
+          showToast(result.error?.message || "Failed to edit post", "error");
+        }
         return;
       }
       const result = await createPost(data);
-      if (result.data) router.push(ROUTES.POST(result.data?.id));
+      if (result.data) {
+        router.push(ROUTES.POST(result.data?.id));
+        showToast("Post created successfully", "success");
+      } else {
+        showToast(result.error?.message || "Failed to create post", "error");
+      }
     });
   };
 

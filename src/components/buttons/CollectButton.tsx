@@ -8,12 +8,14 @@ import { Button } from "../ui/button";
 import { toggleSavePost } from "@/lib/actions/post.action";
 import { redirect } from "next/navigation";
 import ROUTES from "../../../constants/routes";
+import { useToastStore } from "@/store/toastStore";
 
 const CollectButton = ({ postId }: { postId: string }) => {
   const { data: session } = useSession();
   const userId = session?.user?.id;
   const [isSaved, setIsSaved] = useState<boolean | null>(null);
   const [isPending, startTransition] = useTransition();
+  const showToast = useToastStore((state) => state.showToast);
 
   useEffect(() => {
     const checkIsSaved = async () => {
@@ -39,8 +41,9 @@ const CollectButton = ({ postId }: { postId: string }) => {
       const { success, data, error } = await toggleSavePost({ postId });
       if (success) {
         setIsSaved(data!.isSaved);
+        showToast(data!.isSaved ? "Post saved" : "Post removed", "success");
       } else {
-        alert(`(Operation Failed) ${error?.message}`);
+        showToast(error?.message ?? "Operation failed", "error");
       }
     });
   };

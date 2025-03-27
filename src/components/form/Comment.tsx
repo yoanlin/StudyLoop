@@ -21,6 +21,7 @@ import { createComment } from "@/lib/actions/comment.action";
 import { LoaderCircle } from "lucide-react";
 import Link from "next/link";
 import ROUTES from "../../../constants/routes";
+import { useToastStore } from "@/store/toastStore";
 
 const Comment = ({ postId }: { postId: string }) => {
   const [isCommenting, startCommentingTransition] = useTransition();
@@ -33,6 +34,7 @@ const Comment = ({ postId }: { postId: string }) => {
     },
     mode: "onChange",
   });
+  const showToast = useToastStore((state) => state.showToast);
 
   const handleSubmit = async (values: z.infer<typeof CreateCommentSchema>) => {
     startCommentingTransition(async () => {
@@ -42,7 +44,10 @@ const Comment = ({ postId }: { postId: string }) => {
         rating: values.rating,
       });
 
-      if (result.success) form.reset();
+      if (result.success) {
+        form.reset();
+        showToast("Comment posted", "success");
+      }
     });
   };
 

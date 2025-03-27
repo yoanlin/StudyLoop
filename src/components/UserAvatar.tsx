@@ -14,6 +14,7 @@ import Image from "next/image";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
 import ROUTES from "../../constants/routes";
+import { useToastStore } from "@/store/toastStore";
 
 interface Props {
   userId: string;
@@ -22,6 +23,18 @@ interface Props {
 }
 
 const UserAvatar = ({ userId, name, imageUrl }: Props) => {
+  const { showToast } = useToastStore();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut({ redirect: false }); // Prevent default redirection
+      showToast("Logged out successfully", "success");
+    } catch (error) {
+      console.error("Error during sign out:", error);
+      showToast("Failed to log out", "error");
+    }
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none">
@@ -41,7 +54,7 @@ const UserAvatar = ({ userId, name, imageUrl }: Props) => {
         <DropdownMenuItem asChild className="text-xl">
           <Link href={ROUTES.PROFILE(userId)}>Profile</Link>
         </DropdownMenuItem>
-        <DropdownMenuItem className="py-2 text-xl" onClick={() => signOut()}>
+        <DropdownMenuItem className="py-2 text-xl" onClick={handleSignOut}>
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
