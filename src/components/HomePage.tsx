@@ -51,7 +51,7 @@ const HomePage = ({
       <main className="flex size-full flex-col pb-16">
         <Hero />
         <section className="mt-10 flex flex-col items-center gap-5 px-10 pb-20 md:px-20 lg:max-w-3xl xl:max-w-5xl">
-          <div className="flex w-full max-w-3xl flex-col items-center justify-between gap-5 sm:flex-row">
+          <div className="flex w-full max-w-2xl flex-col items-center justify-between gap-5 sm:flex-row">
             <Searchbar
               route="/"
               placeholder="Search for learning resources"
