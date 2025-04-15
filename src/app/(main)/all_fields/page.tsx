@@ -12,14 +12,14 @@ const FieldsPage = async ({ searchParams }: SearchParams) => {
     query: query || "",
     filter: filter || "",
     page: Number(page) || 1,
-    pageSize: Number(pageSize) || 2,
+    pageSize: Number(pageSize) || 12,
   });
 
   const { fields, isNext } = data || {};
 
   return (
-    <div className="mt-10 flex h-screen w-full max-w-2xl flex-col px-10 text-2xl sm:ml-20 lg:max-w-4xl ">
-      <div className="flex flex-col justify-between gap-5 sm:flex-row">
+    <div className="mt-10 flex h-screen w-full max-w-2xl flex-col overflow-hidden px-10 text-2xl sm:ml-20 lg:max-w-4xl">
+      <div className="flex flex-col justify-between gap-5 overflow-hidden sm:flex-row">
         <Searchbar
           route="/all_fields"
           placeholder="Search for field"
@@ -36,7 +36,7 @@ const FieldsPage = async ({ searchParams }: SearchParams) => {
 
       <main className="mt-10 flex flex-col font-bowlbyOneSC">
         <h2 className="text-2xl">ALL FIELDS</h2>
-        <section className="mb-10 mt-5 flex flex-wrap gap-5 xl:flex-nowrap">
+        <section className="mb-10 mt-5 flex flex-wrap gap-5 sm:grid sm:grid-cols-2 xl:grid-cols-3">
           {success ? (
             fields && fields.length > 0 ? (
               fields.map((field) => (

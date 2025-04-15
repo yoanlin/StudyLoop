@@ -3,7 +3,7 @@ import React from "react";
 
 const LeaderBoardloading = () => {
   return (
-    <div className="mx-8 mt-12 overflow-hidden lg:mx-32">
+    <div className="mx-8 mt-10 overflow-hidden lg:mx-32">
       <Skeleton className="h-12 w-full max-w-3xl" />
 
       <div className="mt-28 flex w-full max-w-3xl flex-wrap gap-5 overflow-hidden">

@@ -6,7 +6,7 @@ import ROUTES from "../../../constants/routes";
 
 const UserCard = ({ user }: { user: UserWithPostCount }) => {
   return (
-    <div className="flex w-[calc(50%-10px)] justify-center rounded-lg bg-stone-100 py-3 font-markaziText shadow  dark:bg-neutral-800 sm:w-[30%] lg:w-[calc(25%-15px)]">
+    <div className="flex w-full justify-center rounded-lg bg-stone-100 py-3 font-markaziText shadow  dark:bg-neutral-800">
       <Link
         className="flex flex-col items-center"
         href={ROUTES.PROFILE(user.id)}

@@ -3,7 +3,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const CollectionLoading = () => {
   return (
     <div>
-      <div className="mx-8 mt-14 flex flex-col gap-3 sm:mx-14 sm:flex-row lg:mx-40 lg:max-w-2xl">
+      <div className="mx-8 mt-10 flex flex-col gap-3 sm:mx-14 sm:flex-row lg:mx-40 lg:max-w-2xl">
         <Skeleton className="h-14 w-full" />
         <Skeleton className="h-14 w-full sm:w-1/3" />
       </div>

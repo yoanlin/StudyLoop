@@ -28,7 +28,7 @@ const SubscriptionPage = async ({ searchParams }: SearchParams) => {
 
       <main className="mt-10 flex h-screen flex-col">
         <h2 className="font-bowlbyOneSC text-2xl">SUBSCRIPTIONS</h2>
-        <section className="mb-10 mt-5 flex flex-wrap gap-5 xl:flex-nowrap">
+        <section className="mb-10 mt-5 flex flex-wrap gap-5 sm:grid sm:grid-cols-2 xl:grid-cols-3">
           {success ? (
             fields && fields.length > 0 ? (
               fields.map((field) => (

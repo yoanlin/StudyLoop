@@ -23,7 +23,7 @@ const LeaderboardPage = async ({ searchParams }: SearchParams) => {
 
         <div className="w-full max-w-3xl self-center lg:self-start">
           {users && users.length > 0 ? (
-            <section className="mt-8 flex w-full flex-wrap gap-5">
+            <section className="mt-8 grid w-full grid-cols-2 gap-5 sm:grid-cols-3 xl:grid-cols-4">
               {users.map((user) => (
                 <UserCard key={user.id} user={user} />
               ))}
