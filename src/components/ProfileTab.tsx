@@ -142,7 +142,7 @@ const NewpostButton = ({ isUser }: { isUser: boolean }) => {
     <Button
       className={cn(
         `button w-full font-markaziText text-lg text-black sm:w-52 xl:px-10 xl:text-xl`,
-        !isUser && "hidden"
+        isUser ?? "hidden"
       )}
       asChild
     >

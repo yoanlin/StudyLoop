@@ -19,7 +19,6 @@ const FilterSelector = ({
   const router = useRouter();
 
   const handleUpdate = (value: string) => {
-    console.log(value);
     let newUrl = "";
 
     newUrl = formUrlQuery({
